@@ -55,7 +55,11 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "silk_over_copper|106055514|36700000|11fd487b-3af4-4948-8d06-d4de78237149|20c09519-5d7d-445b-b80c-5f0067b6f431",
+        "silk_over_copper|111814700|47967775|11fd487b-3af4-4948-8d06-d4de78237149|f2baf590-51dd-4aa4-943e-4d780aa87ba2",
+        "silk_over_copper|173130000|45095000|1b1aca70-1348-417f-b26e-d5ae4d8994f9|ff7b31bb-0ba1-49f5-9ede-ae1e968c94d3"
+      ],
       "meta": {
         "version": 2
       },
@@ -383,7 +387,7 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "spinner.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
