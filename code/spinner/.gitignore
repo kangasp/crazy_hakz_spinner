@@ -1,0 +1,5 @@
+build/
+sdkconfig
+sdkconfig.oldbuild
+.devcontainer
+sdkconfig.old
