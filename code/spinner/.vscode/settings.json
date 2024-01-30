@@ -4,5 +4,10 @@
   "idf.openOcdConfigs": [
     "interface/ftdi/esp32_devkitj_v1.cfg",
     "target/esp32.cfg"
-  ]
+  ],
+  "idf.portWin": "COM4",
+  "files.associations": {
+    "spi_master.h": "c"
+  },
+  "idf.flashType": "UART"
 }
