@@ -7,7 +7,8 @@
   ],
   "idf.portWin": "COM4",
   "files.associations": {
-    "spi_master.h": "c"
+    "spi_master.h": "c",
+    "rotary_encoder.h": "c"
   },
   "idf.flashType": "UART"
 }

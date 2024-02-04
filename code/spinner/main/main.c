@@ -8,6 +8,9 @@
 
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
+// #include "driver/pulse_cnt.h"  This is for newer framework... 5+ ??
+
+#include "rotary_encoder.h"
 
 
 #define LED_NUM  45
@@ -26,6 +29,8 @@
 // #define PIN_NUM_MOSI 30
 // #define PIN_NUM_CLK  24
 #define PIN_NUM_CS   -1
+#define PIN_A GPIO_NUM_25
+#define PIN_B GPIO_NUM_26
 
 static int init_led_spi(spi_device_handle_t *spi);
 
@@ -81,15 +86,74 @@ void update_buf(uint32_t *buf, int p)
         }
     }
 
+
+#ifdef USE_THE_NEWER_PCNT_DRIVER
+void setup_encoder(pcnt_unit_handle_t *pcnt_unit)
+    {
+    ESP_LOGI(TAG, "install pcnt unit");
+    pcnt_unit_config_t unit_config = {
+        .high_limit = 360,
+        .low_limit = 0,
+    };
+    ESP_ERROR_CHECK(pcnt_new_unit(&unit_config, pcnt_unit));
+
+    ESP_LOGI(TAG, "set glitch filter");
+    pcnt_glitch_filter_config_t filter_config = {
+        .max_glitch_ns = 1000,
+    };
+    ESP_ERROR_CHECK(pcnt_unit_set_glitch_filter(*pcnt_unit, &filter_config));
+
+    ESP_LOGI(TAG, "install pcnt channels");
+    pcnt_chan_config_t chan_a_config = {
+        .edge_gpio_num = PIN_A,
+        .level_gpio_num = PIN_B,
+    };
+    pcnt_channel_handle_t pcnt_chan_a = NULL;
+    ESP_ERROR_CHECK(pcnt_new_channel(*pcnt_unit, &chan_a_config, &pcnt_chan_a));
+    pcnt_chan_config_t chan_b_config = {
+        .edge_gpio_num = PIN_B,
+        .level_gpio_num = PIN_A,
+    };
+    pcnt_channel_handle_t pcnt_chan_b = NULL;
+    ESP_ERROR_CHECK(pcnt_new_channel(*pcnt_unit, &chan_b_config, &pcnt_chan_b));
+
+    ESP_LOGI(TAG, "set edge and level actions for pcnt channels");
+    ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_a, PCNT_CHANNEL_EDGE_ACTION_DECREASE, PCNT_CHANNEL_EDGE_ACTION_INCREASE));
+    ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_a, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
+    ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_b, PCNT_CHANNEL_EDGE_ACTION_INCREASE, PCNT_CHANNEL_EDGE_ACTION_DECREASE));
+    ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_b, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
+}
+#endif
+
+
+
+rotary_encoder_t* setup_encoder()
+{
+    rotary_encoder_t* encoder = NULL;
+    uint32_t pcnt_unit = 0;
+    rotary_encoder_config_t config = ROTARY_ENCODER_DEFAULT_CONFIG((rotary_encoder_dev_t)pcnt_unit, PIN_A, PIN_B);
+    ESP_ERROR_CHECK(rotary_encoder_new_ec11(&config, &encoder));
+    // Filter out glitch (1us)
+    ESP_ERROR_CHECK(encoder->set_glitch_filter(encoder, 1));
+    // Start encoder
+    ESP_ERROR_CHECK(encoder->start(encoder));
+    return encoder;
+}
+
+
 void app_main(void)
 {
     esp_err_t ret;
     spi_device_handle_t spi;
     uint32_t *buf;
     int i;
+    // pcnt_unit_handle_t pcnt_unit;
+    rotary_encoder_t *encoder;
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
 
+    // setup_encoder(&pcnt_unit);
+    encoder = setup_encoder();
     ret = init_led_spi(&spi);
 	buf = (uint32_t*)heap_caps_malloc(size, MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
     buf[0] = 0x00000000;
@@ -103,11 +167,14 @@ void app_main(void)
     i = 0;
     while( 1 )
         {
-        i = i%50;
-        update_buf(buf, i++);
+        // ret = pcnt_unit_get_count(pcnt_unit, &i);
+        i = encoder->get_counter_value(encoder);
+        printf("Pulse count: %d\n", i);
+        update_buf(buf, i%45);
         ret = spi_device_transmit( spi, &t );
         // printf("spi_device_transmit, ret:  %d\n", ret );
-        vTaskDelay(1);
+        ets_delay_us(5);
+        vTaskDelay(0);
         }
 }
 
