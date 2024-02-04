@@ -9,6 +9,7 @@
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
 
+#include "rotary_encoder.h"
 
 #define LED_NUM  45
 #define BUF_SZ  ((3 + LED_NUM) * sizeof(uint32_t))  // 1 uint32 for start, 2 uint32 for end
@@ -89,6 +90,14 @@ void app_main(void)
     int i;
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
+    rotary_encoder_info_t  rot_info;
+    gpio_num_t pin_a = GPIO_NUM_25; // PIN_A;
+    gpio_num_t pin_b = GPIO_NUM_26; //  PIN_B;
+    rotary_encoder_state_t rot_state;
+
+    ESP_ERROR_CHECK(gpio_install_isr_service(0));
+    ret = rotary_encoder_init( &rot_info, pin_a, pin_b );
+
 
     ret = init_led_spi(&spi);
 	buf = (uint32_t*)heap_caps_malloc(size, MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
@@ -103,11 +112,15 @@ void app_main(void)
     i = 0;
     while( 1 )
         {
-        i = i%50;
-        update_buf(buf, i++);
+        // i = i%50;
+        ret = rotary_encoder_get_state( &rot_info, &rot_state );
+        ret = rotary_encoder_enable_half_steps( &rot_info, false );
+        i = rot_state.position;
+        printf("position: %d\n", i);
+        update_buf(buf, i % LED_NUM );
         ret = spi_device_transmit( spi, &t );
         // printf("spi_device_transmit, ret:  %d\n", ret );
-        vTaskDelay(1);
+        vTaskDelay(2);
         }
 }
 
