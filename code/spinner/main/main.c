@@ -32,8 +32,12 @@
 #define PIN_A GPIO_NUM_25
 #define PIN_B GPIO_NUM_26
 
-static int init_led_spi(spi_device_handle_t *spi);
 
+static uint32_t g_buf[360][15] = {
+0
+};
+
+static int init_led_spi(spi_device_handle_t *spi);
 
 static int init_led_spi(spi_device_handle_t *spi)
 {
@@ -63,27 +67,65 @@ static int init_led_spi(spi_device_handle_t *spi)
 
 void update_buf(uint32_t *buf, int p)
     {
-    #define LUM 0xef
+    #define LUM 0xe5
     uint8_t r, g, b, i;
+        memcpy( &buf[1],    &g_buf[p][0], sizeof(uint32_t)*15 );
+        memcpy( &buf[1+15], &g_buf[(p+120) % 360][0], sizeof(uint32_t)*15 );
+        memcpy( &buf[1+30], &g_buf[(p+240)%360][0], sizeof(uint32_t)*15 );
+    #ifdef WORKEDDD
     for(i=0; i<LED_NUM; i++)
         {
-        // r = (p-i) * 4;
-        // g = (p-i+15) * 4;
-        // b = (p-i+30) * 4;
         r = 0;
         g = 0;
         b = 0;
-        if( i == p)
+        if( p == 0 )
             {
-            if( p < 15 )
-                r = 0x55;
-            else if( p < 30 )
-                g = 0x55;
-            else
-                b = 0x55;
+            if( i >=0 && i < 15 )
+                {
+                r = 0xaa;
+                }
+            if( i >=15 && i < 30 )
+                {
+                g = 0xaa;
+                }
+            if( i >=30 && i < 45 )
+                {
+                b = 0xaa;
+                }
+            }
+        if( p == 240 )
+            {
+            if( i >=0 && i < 15 )
+                {
+                g = 0xaa;
+                }
+            if( i >=15 && i < 30 )
+                {
+                b = 0xaa;
+                }
+            if( i >=30 && i < 45 )
+                {
+                r = 0xaa;
+                }
+            }
+        if( p == 120 )
+            {
+            if( i >=0 && i < 15 )
+                {
+                b = 0xaa;
+                }
+            if( i >=15 && i < 30 )
+                {
+                r = 0xaa;
+                }
+            if( i >=30 && i < 45 )
+                {
+                g = 0xaa;
+                }
             }
         buf[i+1] = RGBL(r,g,b,LUM);
         }
+    #endif
     }
 
 
@@ -134,7 +176,7 @@ rotary_encoder_t* setup_encoder()
     rotary_encoder_config_t config = ROTARY_ENCODER_DEFAULT_CONFIG((rotary_encoder_dev_t)pcnt_unit, PIN_A, PIN_B);
     ESP_ERROR_CHECK(rotary_encoder_new_ec11(&config, &encoder));
     // Filter out glitch (1us)
-    ESP_ERROR_CHECK(encoder->set_glitch_filter(encoder, 1));
+    ESP_ERROR_CHECK(encoder->set_glitch_filter(encoder, 0));
     // Start encoder
     ESP_ERROR_CHECK(encoder->start(encoder));
     return encoder;
@@ -162,6 +204,16 @@ void app_main(void)
     t.tx_buffer = buf;
     t.length = BUF_SZ * 8;
 
+
+    for( i = 0; i < 360; i++ )
+    {
+    for( int j = 0; j < i%15; j++ )
+        {
+        g_buf[i][j] = RGBL(0x55, 0x55, 0x00, LUM );
+        }
+    }
+
+
 // esp_err_t spi_device_transmit(spi_device_handle_t handle, spi_transaction_t *trans_desc);
     printf("Hello, Tester!\n");
     i = 0;
@@ -169,9 +221,20 @@ void app_main(void)
         {
         // ret = pcnt_unit_get_count(pcnt_unit, &i);
         i = encoder->get_counter_value(encoder);
-        printf("Pulse count: %d\n", i);
-        update_buf(buf, i%45);
+        // i++;
+
+        // printf("Pulse count: %d\n", i);
+        // update_buf(buf, i%360);
+        update_buf(buf, 12%360);
+        for( int k = 0; k < 48; k++)
+            {
+            printf("buf[%d]: 0x%08X\n", k, (unsigned int)(buf[k]));
+            }
         ret = spi_device_transmit( spi, &t );
+        ets_delay_us(500);
+        vTaskDelay(0);
+        ret = spi_device_transmit( spi, &t );
+        break;
         // printf("spi_device_transmit, ret:  %d\n", ret );
         ets_delay_us(5);
         vTaskDelay(0);
