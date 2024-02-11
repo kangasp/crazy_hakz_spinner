@@ -69,10 +69,11 @@ void update_buf(uint32_t *buf, int p)
     {
     #define LUM 0xe5
     uint8_t r, g, b, i;
+    #ifdef WORKEDDD
         memcpy( &buf[1],    &g_buf[p][0], sizeof(uint32_t)*15 );
         memcpy( &buf[1+15], &g_buf[(p+120) % 360][0], sizeof(uint32_t)*15 );
         memcpy( &buf[1+30], &g_buf[(p+240)%360][0], sizeof(uint32_t)*15 );
-    #ifdef WORKEDDD
+    #endif
     for(i=0; i<LED_NUM; i++)
         {
         r = 0;
@@ -125,7 +126,6 @@ void update_buf(uint32_t *buf, int p)
             }
         buf[i+1] = RGBL(r,g,b,LUM);
         }
-    #endif
     }
 
 
@@ -219,23 +219,9 @@ void app_main(void)
     i = 0;
     while( 1 )
         {
-        // ret = pcnt_unit_get_count(pcnt_unit, &i);
         i = encoder->get_counter_value(encoder);
-        // i++;
-
-        // printf("Pulse count: %d\n", i);
-        // update_buf(buf, i%360);
-        update_buf(buf, 12%360);
-        for( int k = 0; k < 48; k++)
-            {
-            printf("buf[%d]: 0x%08X\n", k, (unsigned int)(buf[k]));
-            }
+        update_buf(buf, i%360);
         ret = spi_device_transmit( spi, &t );
-        ets_delay_us(500);
-        vTaskDelay(0);
-        ret = spi_device_transmit( spi, &t );
-        break;
-        // printf("spi_device_transmit, ret:  %d\n", ret );
         ets_delay_us(5);
         vTaskDelay(0);
         }
