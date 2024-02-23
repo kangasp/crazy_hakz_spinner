@@ -32,8 +32,15 @@
 #define PIN_A GPIO_NUM_25
 #define PIN_B GPIO_NUM_26
 
+typedef struct
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} rgb_t;
 
-static uint32_t g_buf[360][15] = {
+
+static rgb_t g_buf[360][15] = {
 0
 };
 
@@ -68,62 +75,31 @@ static int init_led_spi(spi_device_handle_t *spi)
 void update_buf(uint32_t *buf, int p)
     {
     #define LUM 0xe5
-    uint8_t r, g, b, i;
+    uint8_t r, g, b, i, l, s;
     #ifdef WORKEDDD
         memcpy( &buf[1],    &g_buf[p][0], sizeof(uint32_t)*15 );
         memcpy( &buf[1+15], &g_buf[(p+120) % 360][0], sizeof(uint32_t)*15 );
         memcpy( &buf[1+30], &g_buf[(p+240)%360][0], sizeof(uint32_t)*15 );
     #endif
+    s = 0/*  */;
     for(i=0; i<LED_NUM; i++)
         {
-        r = 0;
-        g = 0;
-        b = 0;
-        if( p == 0 )
+        if( i >=0 && i < 15 )
             {
-            if( i >=0 && i < 15 )
-                {
-                r = 0xaa;
-                }
-            if( i >=15 && i < 30 )
-                {
-                g = 0xaa;
-                }
-            if( i >=30 && i < 45 )
-                {
-                b = 0xaa;
-                }
+            s = p;
             }
-        if( p == 240 )
+        if( i >=15 && i < 30 )
             {
-            if( i >=0 && i < 15 )
-                {
-                g = 0xaa;
-                }
-            if( i >=15 && i < 30 )
-                {
-                b = 0xaa;
-                }
-            if( i >=30 && i < 45 )
-                {
-                r = 0xaa;
-                }
+            s = (p+120) % 360;
             }
-        if( p == 120 )
+        if( i >=30 && i < 45 )
             {
-            if( i >=0 && i < 15 )
-                {
-                b = 0xaa;
-                }
-            if( i >=15 && i < 30 )
-                {
-                r = 0xaa;
-                }
-            if( i >=30 && i < 45 )
-                {
-                g = 0xaa;
-                }
+            s = (p+240) % 360;
             }
+        l = i % 15; 
+        r = g_buf[s][l].r;
+        g = g_buf[s][l].g;
+        b = g_buf[s][l].b;
         buf[i+1] = RGBL(r,g,b,LUM);
         }
     }
@@ -209,7 +185,9 @@ void app_main(void)
     {
     for( int j = 0; j < i%15; j++ )
         {
-        g_buf[i][j] = RGBL(0x55, 0x55, 0x00, LUM );
+        g_buf[i][j].r = 0x55;
+        g_buf[i][j].g = 0x55;
+        g_buf[i][j].b = 0x00;
         }
     }
 
