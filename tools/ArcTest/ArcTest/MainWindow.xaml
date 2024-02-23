@@ -1,0 +1,54 @@
+﻿<Window x:Class="ArcTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcTest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid x:Name="grid">
+        <StackPanel Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Current: "/>
+                <Rectangle x:Name="rectCur" Fill="Red"
+                           Height="10" Width="10" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="txtColor" Width="75" Text="00FF0000" />
+                <Button Content="Set" Click="Button_Click_Set"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Red" />
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Green" />
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Blue" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Cyan" />
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Yellow" />
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Magenta" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="White" />
+                <Button Height="20" Width="20"
+                        Click="Button_Click_Color" Background="Black" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="Clear" FontSize="15" Click="Button_Click_Clear"
+                    Margin="10" Padding="10"/>
+            <Button Content="Load" FontSize="15" Click="Button_Click_Load"
+                    Margin="10" Padding="10"/>
+            <Button Content="Save" FontSize="15" Click="Button_Click_Save"
+                    Margin="10" Padding="10"/>
+            <Button Content="Copy" FontSize="15" Click="Button_Click_Copy"
+                    Margin="10" Padding="10"/>
+        </StackPanel >
+    </Grid>
+</Window>
