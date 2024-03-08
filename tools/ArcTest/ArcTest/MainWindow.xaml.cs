@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ArcTest
 {
@@ -25,14 +26,16 @@ namespace ArcTest
     public partial class MainWindow : Window
     {
         const int NUM_LEDS = 15;
-        const int DEGREE = 6;
-        //const int DEGREE = 1;
+        //const int DEGREE = 6;
+        const int DEGREE = 1;
         const int SEGMENTS = 360 / DEGREE;
 
         Color[] segments = new Color[NUM_LEDS * SEGMENTS];
 
         Color currentColor = Colors.Red;
         Color colorZero = Color.FromArgb(0,0,0,0);
+
+        DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -60,6 +63,47 @@ namespace ArcTest
                     grid.Children.Add(arc);
                 }
             }
+
+            timer.Interval = TimeSpan.FromSeconds(10);
+            timer.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            timer.Stop();
+
+            string json = JsonConvert.SerializeObject(segments, Formatting.Indented);
+
+            try
+            {
+                File.WriteAllText("temp.json", json);
+            }
+            catch { }
+        }
+
+        private void StartTimer()
+        {
+            if (!timer.IsEnabled)
+            {
+                timer.Interval = TimeSpan.FromSeconds(10);
+                timer.Start();
+            }
+        }
+
+        private void DoColor(ArcII arc, int count, bool set)
+        {
+            if (set)
+            {
+                segments[count] = currentColor;
+                arc.Stroke = new SolidColorBrush(currentColor);
+            }
+            else
+            {
+                segments[count] = colorZero;
+                arc.Stroke = new SolidColorBrush(Colors.Gray);
+            }
+
+            StartTimer();
         }
 
         private void Arc_MouseEnter(object sender, MouseEventArgs e)
@@ -69,32 +113,26 @@ namespace ArcTest
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                segments[count] = currentColor;
-                arc.Stroke = new SolidColorBrush(segments[count]);
+                DoColor(arc, count, true);
             }
             else if (e.RightButton == MouseButtonState.Pressed)
             {
-                segments[count] = colorZero;
-                arc.Stroke = new SolidColorBrush(Colors.Gray);
+                DoColor(arc, count, false);
             }
         }
 
         private void Arc_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            ArcII arc = (ArcII)sender;
+            int count = (int)arc.Tag;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                ArcII arc = (ArcII)sender;
-                int count = (int)arc.Tag;
-                if (segments[count] == currentColor)
-                {
-                    segments[count] = colorZero;
-                    arc.Stroke = new SolidColorBrush(Colors.Gray);
-                }
-                else
-                {
-                    segments[count] = currentColor;
-                    arc.Stroke = new SolidColorBrush(segments[count]);
-                }
+                //DoColor(arc, count, segments[count] != currentColor);
+                DoColor(arc, count, true);
+            }
+            else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                DoColor(arc, count, false);
             }
         }
 
@@ -109,9 +147,9 @@ namespace ArcTest
                 sb.Append("    { ");
                 for (int j = 0; j < NUM_LEDS; j++)
                 {
-                    //sb.Append($"{{ 0xE3, 0x{segments[15*i+j].R.ToString("X2")}, 0x{segments[15*i + j].B.ToString("X2")}, 0x{segments[15*i + j].G.ToString("X2")} }}, ");
                     Color c = segments[NUM_LEDS * i + j];
-                    sb.Append($"0x00{c.R:X2}{c.G:X2}{c.B:X2}, ");
+                    sb.Append($"{{ 0x{c.R:X2}, 0x{c.B:X2}, 0x{c.G:X2} }}, ");
+                    //sb.Append($"0x00{c.R:X2}{c.G:X2}{c.B:X2}, ");
                 }
 
                 sb.Length -= 2;
@@ -129,12 +167,17 @@ namespace ArcTest
         private void Button_Click_Save(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON Files|*.json";
+            saveFileDialog.Filter = "JSON Files|*.json|Text Files|*.txt";
             if (saveFileDialog.ShowDialog() ?? false)
             {
-                string json = JsonConvert.SerializeObject(segments, Formatting.Indented);
-
-                File.WriteAllText(saveFileDialog.FileName, json);
+                try
+                {
+                    FileParsing.SaveFile(saveFileDialog.FileName, segments);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -157,18 +200,21 @@ namespace ArcTest
         private void Button_Click_Load(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON Files|*.json";
+            openFileDialog.Filter = "JSON Files|*.json|Text Files|*.txt|Image Files|*.jpg;*.png;*.bmp";
             openFileDialog.CheckFileExists = true;
             openFileDialog.CheckPathExists = true;
 
             if (openFileDialog.ShowDialog() ?? false)
             {
-                if (File.Exists(openFileDialog.FileName))
+                try
                 {
-                    string json = File.ReadAllText(openFileDialog.FileName);
-                    segments = JsonConvert.DeserializeObject<Color[]>(json);
+                    segments = FileParsing.ParseFile(openFileDialog.FileName, chkExperimental.IsChecked ?? false);
 
                     RefreshArcs();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -211,6 +257,19 @@ namespace ArcTest
             Button button = (Button)sender;
             currentColor = ((SolidColorBrush)button.Background).Color;
             rectCur.Fill = new SolidColorBrush(currentColor);
+            txtColor.Text = currentColor.ToString();
+        }
+
+        private void grid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta >= 1)
+            {
+                slrZoom.Value += 0.1;
+            }
+            else
+            {
+                slrZoom.Value -= 0.1;
+            }
         }
     }
 }

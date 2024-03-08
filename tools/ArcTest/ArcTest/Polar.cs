@@ -7,8 +7,32 @@ using System.Windows;
 
 namespace ArcTest
 {
-    public static class Polar
+    public class Polar
     {
+        public double A { get; set; }
+        public double R { get; set; }
+        public double Q { get; set; }
+        private Polar(double angle, double radius, double q)
+        {
+            A = angle;
+            R = radius;
+            Q = q;
+        }
+
+        public static Polar CartesianToPolar(Point point, Rect rect)
+        {
+            point = new Point(point.X - rect.Width / 2, point.Y - rect.Height / 2);
+
+            double r = Math.Sqrt((point.X * point.X) + (point.Y * point.Y));
+            double q = Math.Atan2(point.Y, point.X); // Angle in radians
+            double deg = q * 180 / Math.PI; // Convert angle to degrees
+            if (deg < 0)
+                deg += 360;
+
+            return new Polar(deg, r, q);
+        }
+
+
         /// <summary>
         /// Given the center of a circle and its radius, along with the angle 
         /// corresponding to the point, find the coordinates.  In other words, 

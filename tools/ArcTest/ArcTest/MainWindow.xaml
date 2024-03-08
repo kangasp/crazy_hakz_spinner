@@ -3,10 +3,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:ArcTest"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid x:Name="grid">
+    <Grid Background="Transparent" 
+          MouseWheel="grid_MouseWheel">
+        <Grid x:Name="grid" RenderTransformOrigin="0.5, 0.5">
+            <!--<behaviors:Interaction.Behaviors>
+                --><!--<behaviors:MouseDragElementBehavior/>--><!--
+                <behaviors:TranslateZoomRotateBehavior/>
+            </behaviors:Interaction.Behaviors>-->
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform
+                        ScaleX="{Binding ElementName=slrZoom,Path=Value}"
+                        ScaleY="{Binding ElementName=slrZoom,Path=Value}" />
+                    <TranslateTransform
+                        X="{Binding ElementName=slrMoveX,Path=Value}"
+                        Y="{Binding ElementName=slrMoveY,Path=Value}"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Slider x:Name="slrZoom" Width="300" Margin="10" Value="1" />
+            <Slider x:Name="slrMoveX" Width="300" Margin="10" Value="0" Minimum="-800" Maximum="800" />
+            <Slider x:Name="slrMoveY" Width="300" Margin="10" Value="0" Minimum="-800" Maximum="800" />
+        </StackPanel>
+        
         <StackPanel Margin="10">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Current: "/>
@@ -45,10 +70,17 @@
                     Margin="10" Padding="10"/>
             <Button Content="Load" FontSize="15" Click="Button_Click_Load"
                     Margin="10" Padding="10"/>
+            <CheckBox Content="Experimental" x:Name="chkExperimental" />
             <Button Content="Save" FontSize="15" Click="Button_Click_Save"
                     Margin="10" Padding="10"/>
             <Button Content="Copy" FontSize="15" Click="Button_Click_Copy"
                     Margin="10" Padding="10"/>
-        </StackPanel >
+            <Rectangle Fill="Magenta" Height="30" Width="30">
+                <behaviors:Interaction.Behaviors>
+                    <!--<behaviors:MouseDragElementBehavior/>-->
+                    <behaviors:TranslateZoomRotateBehavior/>
+                </behaviors:Interaction.Behaviors>
+            </Rectangle>
+        </StackPanel>
     </Grid>
 </Window>
