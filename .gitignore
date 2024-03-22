@@ -398,4 +398,5 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
-*.sln.iml
+*.sln.imlsimple_http_server/
+code/simple_http_server/

@@ -1,3 +1,4 @@
+
 /* Simple HTTP Server Example
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
@@ -7,36 +8,36 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
+
+
+// SEE THIS:   https://github.com/Jeija/esp32-softap-ota/blob/master/main/main.c
+
+
+
+#include <esp_wifi.h>
+#include <esp_event.h>
 #include <esp_log.h>
+#include <esp_system.h>
 #include <nvs_flash.h>
 #include <sys/param.h>
+#include "nvs_flash.h"
 #include "esp_netif.h"
+#include "esp_eth.h"
 // #include "protocol_examples_common.h"
-// #include "protocol_examples_utils.h"
 #include "esp_tls_crypto.h"
 #include <esp_http_server.h>
-#include "esp_event.h"
-#include "esp_netif.h"
-#include "esp_tls.h"
-#include "esp_check.h"
 
-#if !CONFIG_IDF_TARGET_LINUX
-#include <esp_wifi.h>
-#include <esp_system.h>
-#include "nvs_flash.h"
-#include "esp_eth.h"
-#endif  // !CONFIG_IDF_TARGET_LINUX
 
-#define EXAMPLE_HTTP_QUERY_KEY_MAX_LEN  (64)
+static const char *TAG = "example";
 
+#ifdef  TRYTHISCRAZZY
 /* A simple example that demonstrates how to create GET and POST
  * handlers for the web server.
  */
 
-static const char *TAG = "example";
+
+
+
 
 #if CONFIG_EXAMPLE_BASIC_AUTH
 
@@ -45,20 +46,19 @@ typedef struct {
     char    *password;
 } basic_auth_info_t;
 
+#endif
+
+
+
 #define HTTPD_401      "401 UNAUTHORIZED"           /*!< HTTP Response 401 */
 
 static char *http_auth_basic(const char *username, const char *password)
 {
-    size_t out;
+    int out;
     char *user_info = NULL;
     char *digest = NULL;
     size_t n = 0;
-    int rc = asprintf(&user_info, "%s:%s", username, password);
-    if (rc < 0) {
-        ESP_LOGE(TAG, "asprintf() returned: %d", rc);
-        return NULL;
-    }
-
+    asprintf(&user_info, "%s:%s", username, password);
     if (!user_info) {
         ESP_LOGE(TAG, "No enough memory for user information");
         return NULL;
@@ -72,7 +72,7 @@ static char *http_auth_basic(const char *username, const char *password)
     digest = calloc(1, 6 + n + 1);
     if (digest) {
         strcpy(digest, "Basic ");
-        esp_crypto_base64_encode((unsigned char *)digest + 6, n, &out, (const unsigned char *)user_info, strlen(user_info));
+        esp_crypto_base64_encode((unsigned char *)digest + 6, n, (size_t *)&out, (const unsigned char *)user_info, strlen(user_info));
     }
     free(user_info);
     return digest;
@@ -119,12 +119,7 @@ static esp_err_t basic_auth_get_handler(httpd_req_t *req)
             httpd_resp_set_status(req, HTTPD_200);
             httpd_resp_set_type(req, "application/json");
             httpd_resp_set_hdr(req, "Connection", "keep-alive");
-            int rc = asprintf(&basic_auth_resp, "{\"authenticated\": true,\"user\": \"%s\"}", basic_auth_info->username);
-            if (rc < 0) {
-                ESP_LOGE(TAG, "asprintf() returned: %d", rc);
-                free(auth_credentials);
-                return ESP_FAIL;
-            }
+            asprintf(&basic_auth_resp, "{\"authenticated\": true,\"user\": \"%s\"}", basic_auth_info->username);
             if (!basic_auth_resp) {
                 ESP_LOGE(TAG, "No enough memory for basic authorization response");
                 free(auth_credentials);
@@ -178,7 +173,6 @@ static esp_err_t hello_get_handler(httpd_req_t *req)
     buf_len = httpd_req_get_hdr_value_len(req, "Host") + 1;
     if (buf_len > 1) {
         buf = malloc(buf_len);
-        ESP_RETURN_ON_FALSE(buf, ESP_ERR_NO_MEM, TAG, "buffer alloc failed");
         /* Copy null terminated value string into buffer */
         if (httpd_req_get_hdr_value_str(req, "Host", buf, buf_len) == ESP_OK) {
             ESP_LOGI(TAG, "Found header => Host: %s", buf);
@@ -189,7 +183,6 @@ static esp_err_t hello_get_handler(httpd_req_t *req)
     buf_len = httpd_req_get_hdr_value_len(req, "Test-Header-2") + 1;
     if (buf_len > 1) {
         buf = malloc(buf_len);
-        ESP_RETURN_ON_FALSE(buf, ESP_ERR_NO_MEM, TAG, "buffer alloc failed");
         if (httpd_req_get_hdr_value_str(req, "Test-Header-2", buf, buf_len) == ESP_OK) {
             ESP_LOGI(TAG, "Found header => Test-Header-2: %s", buf);
         }
@@ -199,7 +192,6 @@ static esp_err_t hello_get_handler(httpd_req_t *req)
     buf_len = httpd_req_get_hdr_value_len(req, "Test-Header-1") + 1;
     if (buf_len > 1) {
         buf = malloc(buf_len);
-        ESP_RETURN_ON_FALSE(buf, ESP_ERR_NO_MEM, TAG, "buffer alloc failed");
         if (httpd_req_get_hdr_value_str(req, "Test-Header-1", buf, buf_len) == ESP_OK) {
             ESP_LOGI(TAG, "Found header => Test-Header-1: %s", buf);
         }
@@ -211,25 +203,18 @@ static esp_err_t hello_get_handler(httpd_req_t *req)
     buf_len = httpd_req_get_url_query_len(req) + 1;
     if (buf_len > 1) {
         buf = malloc(buf_len);
-        ESP_RETURN_ON_FALSE(buf, ESP_ERR_NO_MEM, TAG, "buffer alloc failed");
         if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {
             ESP_LOGI(TAG, "Found URL query => %s", buf);
-            char param[EXAMPLE_HTTP_QUERY_KEY_MAX_LEN], dec_param[EXAMPLE_HTTP_QUERY_KEY_MAX_LEN] = {0};
+            char param[32];
             /* Get value of expected key from query string */
             if (httpd_query_key_value(buf, "query1", param, sizeof(param)) == ESP_OK) {
                 ESP_LOGI(TAG, "Found URL query parameter => query1=%s", param);
-                example_uri_decode(dec_param, param, strnlen(param, EXAMPLE_HTTP_QUERY_KEY_MAX_LEN));
-                ESP_LOGI(TAG, "Decoded query parameter => %s", dec_param);
             }
             if (httpd_query_key_value(buf, "query3", param, sizeof(param)) == ESP_OK) {
                 ESP_LOGI(TAG, "Found URL query parameter => query3=%s", param);
-                example_uri_decode(dec_param, param, strnlen(param, EXAMPLE_HTTP_QUERY_KEY_MAX_LEN));
-                ESP_LOGI(TAG, "Decoded query parameter => %s", dec_param);
             }
             if (httpd_query_key_value(buf, "query2", param, sizeof(param)) == ESP_OK) {
                 ESP_LOGI(TAG, "Found URL query parameter => query2=%s", param);
-                example_uri_decode(dec_param, param, strnlen(param, EXAMPLE_HTTP_QUERY_KEY_MAX_LEN));
-                ESP_LOGI(TAG, "Decoded query parameter => %s", dec_param);
             }
         }
         free(buf);
@@ -298,28 +283,6 @@ static const httpd_uri_t echo = {
     .method    = HTTP_POST,
     .handler   = echo_post_handler,
     .user_ctx  = NULL
-};
-
-/* An HTTP_ANY handler */
-static esp_err_t any_handler(httpd_req_t *req)
-{
-    /* Send response with body set as the
-     * string passed in user context*/
-    const char* resp_str = (const char*) req->user_ctx;
-    httpd_resp_send(req, resp_str, HTTPD_RESP_USE_STRLEN);
-
-    // End response
-    httpd_resp_send_chunk(req, NULL, 0);
-    return ESP_OK;
-}
-
-static const httpd_uri_t any = {
-    .uri       = "/any",
-    .method    = HTTP_ANY,
-    .handler   = any_handler,
-    /* Let's pass response string in user
-     * context to demonstrate it's usage */
-    .user_ctx  = "Hello World!"
 };
 
 /* This handler allows the custom error handling functionality to be
@@ -396,13 +359,6 @@ static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-#if CONFIG_IDF_TARGET_LINUX
-    // Setting port as 8001 when building for Linux. Port 80 can be used only by a priviliged user in linux.
-    // So when a unpriviliged user tries to run the application, it throws bind error and the server is not started.
-    // Port 8001 can be used by an unpriviliged user as well. So the application will not throw bind error and the
-    // server will be started.
-    config.server_port = 8001;
-#endif // !CONFIG_IDF_TARGET_LINUX
     config.lru_purge_enable = true;
 
     // Start the httpd server
@@ -413,7 +369,6 @@ static httpd_handle_t start_webserver(void)
         httpd_register_uri_handler(server, &hello);
         httpd_register_uri_handler(server, &echo);
         httpd_register_uri_handler(server, &ctrl);
-        httpd_register_uri_handler(server, &any);
         #if CONFIG_EXAMPLE_BASIC_AUTH
         httpd_register_basic_auth(server);
         #endif
@@ -424,11 +379,10 @@ static httpd_handle_t start_webserver(void)
     return NULL;
 }
 
-#if !CONFIG_IDF_TARGET_LINUX
-static esp_err_t stop_webserver(httpd_handle_t server)
+static void stop_webserver(httpd_handle_t server)
 {
     // Stop the httpd server
-    return httpd_stop(server);
+    httpd_stop(server);
 }
 
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
@@ -437,11 +391,8 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     httpd_handle_t* server = (httpd_handle_t*) arg;
     if (*server) {
         ESP_LOGI(TAG, "Stopping webserver");
-        if (stop_webserver(*server) == ESP_OK) {
-            *server = NULL;
-        } else {
-            ESP_LOGE(TAG, "Failed to stop http server");
-        }
+        stop_webserver(*server);
+        *server = NULL;
     }
 }
 
@@ -454,9 +405,10 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
         *server = start_webserver();
     }
 }
-#endif // !CONFIG_IDF_TARGET_LINUX
 
-void server(void* args)
+
+#ifdef DONTDOTHIS
+void app_main(void)
 {
     static httpd_handle_t server = NULL;
 
@@ -473,7 +425,6 @@ void server(void* args)
     /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
      * and re-start it upon connection.
      */
-#if !CONFIG_IDF_TARGET_LINUX
 #ifdef CONFIG_EXAMPLE_CONNECT_WIFI
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
@@ -482,12 +433,115 @@ void server(void* args)
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &connect_handler, &server));
     ESP_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ETHERNET_EVENT_DISCONNECTED, &disconnect_handler, &server));
 #endif // CONFIG_EXAMPLE_CONNECT_ETHERNET
-#endif // !CONFIG_IDF_TARGET_LINUX
 
     /* Start the server for the first time */
     server = start_webserver();
+}
 
-    while (server) {
-        sleep(5);
+
+
+
+
+#endif
+
+
+
+
+/*  WiFi softAP Example
+
+   This example code is in the Public Domain (or CC0 licensed, at your option.)
+
+   Unless required by applicable law or agreed to in writing, this
+   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+   CONDITIONS OF ANY KIND, either express or implied.
+*/
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
+
+#include "lwip/err.h"
+#include "lwip/sys.h"
+
+/* The examples use WiFi configuration that you can set via project configuration menu.
+
+   If you'd rather not, just change the below entries to strings with
+   the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
+*/
+#define EXAMPLE_ESP_WIFI_SSID      "HAKZ"
+#define EXAMPLE_ESP_WIFI_PASS      "12345679"
+#define EXAMPLE_ESP_WIFI_CHANNEL   1
+#define EXAMPLE_MAX_STA_CONN       2
+
+// static const char *TAG = "wifi softAP";
+
+static void wifi_event_handler(void* arg, esp_event_base_t event_base,
+                                    int32_t event_id, void* event_data)
+{
+    if (event_id == WIFI_EVENT_AP_STACONNECTED) {
+        wifi_event_ap_staconnected_t* event = (wifi_event_ap_staconnected_t*) event_data;
+        ESP_LOGI(TAG, "station "MACSTR" join, AID=%d",
+                 MAC2STR(event->mac), event->aid);
+    } else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) {
+        wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
+        ESP_LOGI(TAG, "station "MACSTR" leave, AID=%d",
+                 MAC2STR(event->mac), event->aid);
     }
+}
+
+void wifi_init_softap(void)
+{
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    esp_netif_create_default_wifi_ap();
+
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+                                                        ESP_EVENT_ANY_ID,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        NULL));
+
+    wifi_config_t wifi_config = {
+        .ap = {
+            .ssid = EXAMPLE_ESP_WIFI_SSID,
+            .ssid_len = strlen(EXAMPLE_ESP_WIFI_SSID),
+            .channel = EXAMPLE_ESP_WIFI_CHANNEL,
+            .password = EXAMPLE_ESP_WIFI_PASS,
+            .max_connection = EXAMPLE_MAX_STA_CONN,
+            .authmode = WIFI_AUTH_WPA_WPA2_PSK
+        },
+    };
+    if (strlen(EXAMPLE_ESP_WIFI_PASS) == 0) {
+        wifi_config.ap.authmode = WIFI_AUTH_OPEN;
+    }
+
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
+
+    ESP_LOGI(TAG, "wifi_init_softap finished. SSID:%s password:%s channel:%d",
+             EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS, EXAMPLE_ESP_WIFI_CHANNEL);
+}
+
+void server(void* args)
+{
+    //Initialize NVS
+    static httpd_handle_t server = NULL;
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+      ESP_ERROR_CHECK(nvs_flash_erase());
+      ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_AP");
+    wifi_init_softap();
+    server = start_webserver();
 }

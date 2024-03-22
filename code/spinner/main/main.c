@@ -11,6 +11,7 @@
 // #include "driver/pulse_cnt.h"  This is for newer framework... 5+ ??
 
 #include "rotary_encoder.h"
+#include "all_things.h"
 
 
 #define LED_NUM  45
@@ -613,9 +614,9 @@ void app_main(void)
     printf("rgb:  0x%02X, 0x%02X, 0x%02X\n", g_buf[346][14].r,  g_buf[346][14].g,  g_buf[346][14].b);
     i = 0;
 
-    TaskHandle_t myTaskHandle2 = NULL;
-    xTaskCreatePinnedToCore(server, "Demo_Task2", 4096, NULL,10, &myTaskHandle2, 1);
-
+    // TaskHandle_t myTaskHandle2 = NULL;
+    // xTaskCreatePinnedToCore(server, "THE_SERVER!!", 4096, NULL,10, &myTaskHandle2, 1);
+    server( NULL );
 
     while( 1 )
         {
