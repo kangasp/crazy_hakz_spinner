@@ -14,8 +14,8 @@
 #include <nvs_flash.h>
 #include <sys/param.h>
 #include "esp_netif.h"
-#include "protocol_examples_common.h"
-#include "protocol_examples_utils.h"
+// #include "protocol_examples_common.h"
+// #include "protocol_examples_utils.h"
 #include "esp_tls_crypto.h"
 #include <esp_http_server.h>
 #include "esp_event.h"
@@ -456,7 +456,7 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
 }
 #endif // !CONFIG_IDF_TARGET_LINUX
 
-void server(void)
+void server(void* args)
 {
     static httpd_handle_t server = NULL;
 

@@ -1,3 +1,3 @@
 
-void server(void);
+void server(void* args);
 
