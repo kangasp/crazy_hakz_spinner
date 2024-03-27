@@ -400,3 +400,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.imlsimple_http_server/
 code/simple_http_server/
+code/mdns
