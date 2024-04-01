@@ -167,7 +167,7 @@ namespace ArcTest
         private void Button_Click_Save(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON Files|*.json|Text Files|*.txt";
+            saveFileDialog.Filter = "Binary Files|*.bin|JSON Files|*.json|Text Files|*.txt";
             if (saveFileDialog.ShowDialog() ?? false)
             {
                 try
@@ -200,7 +200,7 @@ namespace ArcTest
         private void Button_Click_Load(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON Files|*.json|Text Files|*.txt|Image Files|*.jpg;*.png;*.bmp";
+            openFileDialog.Filter = "All Files|*.*|JSON Files|*.json|Text Files|*.txt|Image Files|*.jpg;*.png;*.bmp";
             openFileDialog.CheckFileExists = true;
             openFileDialog.CheckPathExists = true;
 

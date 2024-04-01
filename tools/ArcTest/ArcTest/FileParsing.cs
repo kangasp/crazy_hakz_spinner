@@ -120,6 +120,21 @@ namespace ArcTest
                 string json = JsonConvert.SerializeObject(segments, Formatting.Indented);
                 File.WriteAllText(path, json);
             }
+            else if (path.EndsWith(".bin"))
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Create))
+                {
+                    using (BinaryWriter bw = new BinaryWriter(fs))
+                    {
+                        foreach (Color c in segments)
+                        {
+                            bw.Write(c.R);
+                            bw.Write(c.B);
+                            bw.Write(c.G);
+                        }
+                    }
+                }
+            }
         }
     }
 }
