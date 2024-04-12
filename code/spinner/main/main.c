@@ -204,6 +204,9 @@ void app_main(void)
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
 
+
+    sd_main();
+
     // setup_encoder(&pcnt_unit);
     encoder = setup_encoder();
     ret = init_led_spi(&spi);

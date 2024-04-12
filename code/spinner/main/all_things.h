@@ -20,4 +20,4 @@ extern rgb_t g_buf[360][15];
 // DECLARATIONS
 void server(void* args);
 void ota_server(void* args);
-
+void sd_main(void);
