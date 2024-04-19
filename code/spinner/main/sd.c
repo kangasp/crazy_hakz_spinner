@@ -13,10 +13,10 @@
 #include <sys/stat.h>
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
+#include "all_things.h"
 
 static const char *TAG = "example";
 
-#define MOUNT_POINT "/sdcard"
 
 // Pin assignments can be set in menuconfig, see "SD SPI Example Configuration" menu.
 // You can also change the pin assignments here by changing the following 5 lines.
@@ -26,7 +26,11 @@ static const char *TAG = "example";
 #define PIN_NUM_CS    GPIO_NUM_5
 
 
-void sd_main(void)
+const char mount_point[] = MOUNT_POINT;
+sdmmc_card_t *card;
+sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+
+void sd_open(void)
 {
     esp_err_t ret;
 
@@ -38,8 +42,6 @@ void sd_main(void)
         .max_files = 5,
         .allocation_unit_size = 32 * 1024
     };
-    sdmmc_card_t *card;
-    const char mount_point[] = MOUNT_POINT;
     ESP_LOGI(TAG, "Initializing SD card");
 
     // Use settings defined above to initialize SD card and mount FAT filesystem.
@@ -48,7 +50,6 @@ void sd_main(void)
     // production applications.
     ESP_LOGI(TAG, "Using SPI peripheral");
 
-    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     spi_bus_config_t bus_cfg = {
         .mosi_io_num = PIN_NUM_MOSI,
         .miso_io_num = PIN_NUM_MISO,
@@ -85,63 +86,41 @@ void sd_main(void)
     ESP_LOGI(TAG, "Filesystem mounted");
 
     // Card has been initialized, print its properties
-    sdmmc_card_print_info(stdout, card);
+    // sdmmc_card_print_info(stdout, card);
 
     // Use POSIX and C standard library functions to work with files.
+}
 
-    // First create a file.
-    const char *file_hello = MOUNT_POINT"/hello.txt";
 
-    ESP_LOGI(TAG, "Opening file %s", file_hello);
-    FILE *f = fopen(file_hello, "w");
-    if (f == NULL) {
-        ESP_LOGE(TAG, "Failed to open file for writing");
-        return;
-    }
-    fprintf(f, "Hello %s!\n", card->cid.name);
-    fclose(f);
-    ESP_LOGI(TAG, "File written");
-
-    const char *file_foo = MOUNT_POINT"/foo.txt";
-
-    // Check if destination file exists before renaming
-    struct stat st;
-    if (stat(file_foo, &st) == 0) {
-        // Delete it if it exists
-        unlink(file_foo);
-    }
-
-    // Rename original file
-    ESP_LOGI(TAG, "Renaming file %s to %s", file_hello, file_foo);
-    if (rename(file_hello, file_foo) != 0) {
-        ESP_LOGE(TAG, "Rename failed");
-        return;
-    }
-
-    // Open renamed file for reading
-    ESP_LOGI(TAG, "Reading file %s", file_foo);
-    f = fopen(file_foo, "r");
-    if (f == NULL) {
-        ESP_LOGE(TAG, "Failed to open file for reading");
-        return;
-    }
-
-    // Read a line from file
-    char line[64];
-    fgets(line, sizeof(line), f);
-    fclose(f);
-
-    // Strip newline
-    char *pos = strchr(line, '\n');
-    if (pos) {
-        *pos = '\0';
-    }
-    ESP_LOGI(TAG, "Read from file: '%s'", line);
-
+void sd_close(void)
+{
     // All done, unmount partition and disable SPI peripheral
     esp_vfs_fat_sdcard_unmount(mount_point, card);
     ESP_LOGI(TAG, "Card unmounted");
 
     //deinitialize the bus after all devices are removed
     spi_bus_free(host.slot);
+}
+
+
+void read_pic( const char * const f_name, uint *buf, size_t sz )
+{
+    size_t ret;
+    FILE *f;
+
+    // Open renamed file for reading
+    ESP_LOGI(TAG, "Reading file %s", f_name);
+    f = fopen(f_name, "rb");
+    if (f == NULL) {
+        ESP_LOGE(TAG, "Failed to open file for reading");
+        return;
+    }
+
+    ret = fread( buf, 1, sz, f );
+
+    if (ret != sz) {
+        ESP_LOGE(TAG, "Failed to open file for reading");
+    }
+
+    fclose(f);
 }

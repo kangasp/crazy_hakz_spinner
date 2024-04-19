@@ -204,8 +204,11 @@ void app_main(void)
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
 
+    ota_server( NULL );
 
-    sd_main();
+    sd_open();
+    read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+    sd_close();
 
     // setup_encoder(&pcnt_unit);
     encoder = setup_encoder();
@@ -242,9 +245,8 @@ void app_main(void)
     printf("rgb:  0x%02X, 0x%02X, 0x%02X\n", g_buf[346][14].r,  g_buf[346][14].g,  g_buf[346][14].b);
     i = 0;
 
-    // TaskHandle_t myTaskHandle2 = NULL;
-    // xTaskCreatePinnedToCore(server, "THE_SERVER!!", 4096, NULL,10, &myTaskHandle2, 1);
-    ota_server( NULL );
+    TaskHandle_t myTaskHandle2 = NULL;
+    xTaskCreatePinnedToCore(frame_buffer, "FRAMEBUFFER!!", 4096, NULL,10, &myTaskHandle2, 1);
 
     while( 1 )
         {
@@ -261,6 +263,21 @@ void app_main(void)
         ret = spi_device_transmit( spi, &t );
         ets_delay_us(5);
         vTaskDelay(0);
+
         }
 }
 
+void frame_buffer(void* args)
+{
+    while(1)
+    {
+        vTaskDelay(500);
+        sd_open();
+        read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+        sd_close();
+        vTaskDelay(500);
+        sd_open();
+        read_pic( MOUNT_POINT"/new_pic_kirby.bin", g_buf, G_BUF_SZ );
+        sd_close();
+    }
+}

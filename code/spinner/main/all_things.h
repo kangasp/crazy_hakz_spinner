@@ -3,6 +3,8 @@
 #include <string.h>
 
 
+#define MOUNT_POINT "/sdcard"
+
 // TYPES
 typedef struct
 {
@@ -18,6 +20,10 @@ extern rgb_t g_buf[360][15];
 
 
 // DECLARATIONS
-void server(void* args);
+void frame_buffer(void* args);
 void ota_server(void* args);
 void sd_main(void);
+void read_pic( const char * const f_name, uint *buf, size_t sz );
+
+void sd_open(void);
+void sd_close(void);

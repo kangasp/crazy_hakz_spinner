@@ -58,9 +58,7 @@ esp_err_t pics_post_handler(httpd_req_t *req)
 		buf_remain -= recv_len;
 		buf += recv_len;
 	}
-
 	httpd_resp_sendstr(req, "PICS!!!\n");
-
 	return ESP_OK;
 }
 
