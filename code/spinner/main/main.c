@@ -206,9 +206,14 @@ void app_main(void)
 
     ota_server( NULL );
 
+
+    // printf("opening File!\n");
     sd_open();
-    read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
-    sd_close();
+    // read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+    // printf("closing  File!\n");
+    // sd_close();
+    // printf("closed  File!\n");
+
 
     // setup_encoder(&pcnt_unit);
     encoder = setup_encoder();
@@ -242,7 +247,7 @@ void app_main(void)
 
 // esp_err_t spi_device_transmit(spi_device_handle_t handle, spi_transaction_t *trans_desc);
     printf("Hello, Tester!\n");
-    printf("rgb:  0x%02X, 0x%02X, 0x%02X\n", g_buf[346][14].r,  g_buf[346][14].g,  g_buf[346][14].b);
+    printf("rgb:  0x%02X, 0x%02X, 0x%02X\n", g_buf[0][0].r,  g_buf[0][0].g,  g_buf[0][0].b);
     i = 0;
 
     TaskHandle_t myTaskHandle2 = NULL;
@@ -269,15 +274,13 @@ void app_main(void)
 
 void frame_buffer(void* args)
 {
+    // sd_open();
     while(1)
     {
-        vTaskDelay(500);
-        sd_open();
         read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
-        sd_close();
-        vTaskDelay(500);
-        sd_open();
-        read_pic( MOUNT_POINT"/new_pic_kirby.bin", g_buf, G_BUF_SZ );
-        sd_close();
+        vTaskDelay(50);
+        read_pic( MOUNT_POINT"/kirby.bin", g_buf, G_BUF_SZ );
+        vTaskDelay(50);
     }
+    // sd_close();
 }

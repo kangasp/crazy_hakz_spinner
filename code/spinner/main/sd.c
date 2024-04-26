@@ -30,6 +30,7 @@ const char mount_point[] = MOUNT_POINT;
 sdmmc_card_t *card;
 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
 
+
 void sd_open(void)
 {
     esp_err_t ret;
@@ -58,6 +59,8 @@ void sd_open(void)
         .quadhd_io_num = -1,
         .max_transfer_sz = 4000,
     };
+
+    host.slot = SPI3_HOST;
     ret = spi_bus_initialize(host.slot, &bus_cfg, SDSPI_DEFAULT_DMA);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize bus.");
@@ -90,7 +93,6 @@ void sd_open(void)
 
     // Use POSIX and C standard library functions to work with files.
 }
-
 
 void sd_close(void)
 {
