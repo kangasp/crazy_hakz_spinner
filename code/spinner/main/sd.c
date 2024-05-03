@@ -105,7 +105,7 @@ void sd_close(void)
 }
 
 
-void read_pic( const char * const f_name, uint *buf, size_t sz )
+int read_pic( const char * const f_name, uint *buf, size_t sz )
 {
     size_t ret;
     FILE *f;
@@ -115,14 +115,12 @@ void read_pic( const char * const f_name, uint *buf, size_t sz )
     f = fopen(f_name, "rb");
     if (f == NULL) {
         ESP_LOGE(TAG, "Failed to open file for reading");
-        return;
+        return( FALSE );
     }
 
     ret = fread( buf, 1, sz, f );
 
-    if (ret != sz) {
-        ESP_LOGE(TAG, "Failed to open file for reading");
-    }
-
     fclose(f);
+    if( ret != sz ) ESP_LOGE(TAG, "Failed to open file for reading");
+    return( ret == sz );
 }

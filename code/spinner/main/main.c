@@ -274,13 +274,20 @@ void app_main(void)
 
 void frame_buffer(void* args)
 {
+    char pth[64];
+    int i = 1;
     // sd_open();
     while(1)
     {
-        read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
-        vTaskDelay(50);
-        read_pic( MOUNT_POINT"/kirby.bin", g_buf, G_BUF_SZ );
-        vTaskDelay(50);
+        snprintf( pth, sizeof(pth), MOUNT_POINT"/party/%d.bin", i++ );
+        if( read_pic( pth, g_buf, G_BUF_SZ ) )
+            {
+            sleepy_time(10);
+            }
+        else
+            {
+            i = 1;
+            }
     }
     // sd_close();
 }

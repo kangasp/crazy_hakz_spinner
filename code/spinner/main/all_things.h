@@ -4,6 +4,10 @@
 
 
 #define MOUNT_POINT "/sdcard"
+#define FALSE 0
+#define TRUE 1
+
+#define sleepy_time( ms )    vTaskDelay( ms / 10 )
 
 // TYPES
 typedef struct
@@ -23,7 +27,7 @@ extern rgb_t g_buf[360][15];
 void frame_buffer(void* args);
 void ota_server(void* args);
 void sd_main(void);
-void read_pic( const char * const f_name, uint *buf, size_t sz );
+int read_pic( const char * const f_name, uint *buf, size_t sz );
 
 void sd_open(void);
 void sd_close(void);
