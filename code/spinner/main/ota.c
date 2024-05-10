@@ -28,23 +28,28 @@ extern const uint8_t ota_html_end[] asm("_binary_ota_html_end");
 
 esp_err_t index_get_handler(httpd_req_t *req)
 {
-	#define INDEX_PATH    MOUNT_POINT "/index.html"
+	#define INDEX_PATH    MOUNT_POINT"/web/index.html"
+
 	esp_err_t ret;
 	FILE      *f;
 	size_t	  ret_sz;
 	char     buf[64];
+	char     pth[164];
 	bool reading = TRUE;
 	// httpd_resp_send(req, (const char *) index_html_start, index_html_end - index_html_start);
 
     printf("Hello, index handler!\n");
-    f = fopen(INDEX_PATH, "rb");
+    snprintf( pth, sizeof(pth), MOUNT_POINT"/web/index.html" );
+    f = fopen(pth, "rb");
     if (f == NULL) {
+    	printf("Failed to open: %s!\n", pth);
         return( ESP_FAIL );
     }
 
 	do
 		{
         ret_sz = fread( buf, 1, sizeof(buf), f );
+    	printf("index ret_sz: %u\n", ret_sz);
  	    ret = httpd_resp_send_chunk(req, buf, ret_sz);
 		}
 	while( ret_sz > 0 );

@@ -280,7 +280,7 @@ void frame_buffer(void* args)
     while(1)
     {
         snprintf( pth, sizeof(pth), MOUNT_POINT"/party/%d.bin", i++ );
-        if( read_pic( pth, g_buf, G_BUF_SZ ) )
+        if( 1 ) // read_pic( pth, g_buf, G_BUF_SZ ) )
             {
             sleepy_time(10);
             }

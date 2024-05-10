@@ -111,10 +111,10 @@ int read_pic( const char * const f_name, uint *buf, size_t sz )
     FILE *f;
 
     // Open renamed file for reading
-    ESP_LOGI(TAG, "Reading file %s", f_name);
+    // ESP_LOGI(TAG, "Reading file %s", f_name);
     f = fopen(f_name, "rb");
     if (f == NULL) {
-        ESP_LOGE(TAG, "Failed to open file for reading");
+        // ESP_LOGE(TAG, "Failed to open file for reading");
         return( FALSE );
     }
 
