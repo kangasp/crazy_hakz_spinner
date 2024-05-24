@@ -40,9 +40,12 @@ esp_err_t index_get_handler(httpd_req_t *req)
 
     printf("Hello, index handler!\n");
     snprintf( pth, sizeof(pth), MOUNT_POINT"/web/index.html" );
+
+
     f = fopen(pth, "rb");
     if (f == NULL) {
     	printf("Failed to open: %s!\n", pth);
+    	sd_close();
         return( ESP_FAIL );
     }
 
@@ -56,6 +59,7 @@ esp_err_t index_get_handler(httpd_req_t *req)
 
     fclose(f);
 
+    sd_close();
 	return ESP_OK;
 }
 

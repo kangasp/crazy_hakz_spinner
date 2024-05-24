@@ -208,7 +208,7 @@ void app_main(void)
 
 
     // printf("opening File!\n");
-    sd_open();
+    // sd_open();
     // read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
     // printf("closing  File!\n");
     // sd_close();
@@ -276,11 +276,11 @@ void frame_buffer(void* args)
 {
     char pth[64];
     int i = 1;
-    // sd_open();
+    sd_open();
     while(1)
     {
         snprintf( pth, sizeof(pth), MOUNT_POINT"/party/%d.bin", i++ );
-        if( 1 ) // read_pic( pth, g_buf, G_BUF_SZ ) )
+        if( read_pic( pth, g_buf, G_BUF_SZ ) )
             {
             sleepy_time(10);
             }

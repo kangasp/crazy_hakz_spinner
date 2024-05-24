@@ -62,6 +62,7 @@ void sd_open(void)
 
     host.slot = SPI3_HOST;
     ret = spi_bus_initialize(host.slot, &bus_cfg, SDSPI_DEFAULT_DMA);
+    // ret = spi_bus_initialize(host.slot, &bus_cfg, SPI_DMA_DISABLED );
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize bus.");
         return;
