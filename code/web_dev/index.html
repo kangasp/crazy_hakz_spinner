@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Image Conversion</title>
+		<script>
+            function load_image( event ) {
+                var canvas = document.getElementById("id_canvas");
+                var context = canvas.getContext("2d");
+                var image = new Image();
+                image.onload = function() {
+                    canvas.width  = image.width;
+                    canvas.height = image.height;
+                    context.drawImage(image, 0, 0);
+                };
+                image.src = URL.createObjectURL(event.target.files[0]);
+            }
+            function spinnerfly_image() {
+                var canvas = document.getElementById("id_canvas");
+                var context = canvas.getContext("2d");
+                var image_data = context.getImageData( 0, 0, canvas.width, canvas.height );
+                var bin_data = new Uint8Array( image_data.data.length);
+                for( var i=0; i < image_data.data.length; i++ ) {
+                    bin_data[i] = image_data.data[i];
+                }
+                var blob = new Blob([bin_data], {type:'application/octet-stream'});
+                var url = URL.createObjectURL(blob);
+                var link = document.createElement("a");
+                link.href = url;
+                link.download = "superFly.bin";
+                link.click();
+            }
+		</script>
+	</head>
+	<body>
+        <input type="file" accept="image/*" onchange="load_image(event)">
+        <canvas id="id_canvas"></canvas>
+        <button onclick="spinnerfly_image()">Spinnerfly</button>
+	</body>
+</html>
