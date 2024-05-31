@@ -38,13 +38,16 @@
                     }
                 }
 
-                /* Test download */
+                post_it(new Uint8Array(bin_data));
+
+                /* Test download
                 var blob = new Blob([new Uint8Array(bin_data)], {type:'application/octet-stream'});
                 var url = URL.createObjectURL(blob);
                 var link = document.createElement("a");
                 link.href = url;
                 link.download = "superFly.bin";
                 link.click();
+                */
             }
             function get_rbg_data( x, y, image_data ) {
                 var idx = (x + (y * image_data.width)) * 4;
@@ -62,11 +65,36 @@
                 y += y_offset;
                 return[x,y];
             }
+            function post_it( bin_data ) {
+                var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+					    var progress = document.getElementById("progress");
+						if (xhr.status == 200) {
+					        progress.textContent = "Progress Done 🎉🎉";
+						} else if (xhr.status == 0) {
+							alert("Server closed the connection abruptly!");
+						} else {
+							alert(xhr.status + " Error!\n" + xhr.responseText);
+						}
+					}
+				};
+
+				xhr.upload.onprogress = function (e) {
+					var progress = document.getElementById("progress");
+					progress.textContent = "Progress: " + (e.loaded / e.total * 100).toFixed(0) + "%";
+				};
+				xhr.open("POST", "/pics", true);
+				xhr.send(bin_data);
+            }
+
+
 		</script>
 	</head>
 	<body>
         <input type="file" accept="image/*" onchange="load_image(event)">
         <canvas id="id_canvas"></canvas>
         <button onclick="spinnerfly_image()">Spinnerfly</button>
+        <div id="progress"></div>
 	</body>
 </html>
