@@ -31,3 +31,6 @@ int read_pic( const char * const f_name, uint *buf, size_t sz );
 
 void sd_open(void);
 void sd_close(void);
+
+char * get_home();
+ssize_t get_home_sz();

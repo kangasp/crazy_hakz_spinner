@@ -188,10 +188,17 @@ rotary_encoder_t* setup_encoder()
     return encoder;
 }
 
+static char s_home[1024*1];
+static ssize_t s_home_sz;
 
-
-
-
+char * get_home()
+    {
+    return s_home;
+    }
+ssize_t get_home_sz()
+{
+    return s_home_sz;
+}
 
 void app_main(void)
 {
@@ -204,14 +211,22 @@ void app_main(void)
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
 
+	FILE      *f;
+	size_t	  ret_sz;
+	char     pth[164];
+
     ota_server( NULL );
 
 
     // printf("opening File!\n");
     sd_open();
-    // read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+    memset(s_home, 0, sizeof(s_home));
+    read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+    // read_pic( MOUNT_POINT"/index.htm", s_home, sizeof(s_home) );
+    // printf("Read index.htm:   %s\n", s_home);
+    // printf("Read gbuf:   %i\n", g_buf[50][1].r);
     // printf("closing  File!\n");
-    // sd_close();
+    sd_close();
     // printf("closed  File!\n");
 
 

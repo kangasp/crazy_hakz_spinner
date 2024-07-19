@@ -36,15 +36,20 @@ esp_err_t index_get_handler(httpd_req_t *req)
 	char     buf[64];
 	char     pth[164];
 	bool reading = TRUE;
-	#define SDCARD_SUCK 1
-	#ifdef SDCARD_SUCK
-	httpd_resp_send(req, (const char *) index_html_start, index_html_end - index_html_start);
+
+	#define SDCARD_SUCK 0
+	#if SDCARD_SUCK
+	httpd_resp_send(req, (const char *) get_home(), get_home_sz() );
+
+	// httpd_resp_send(req, (const char *) index_html_start, index_html_end - index_html_start);
 	#else
+    sd_open();
     printf("Hello, index handler!\n");
-    snprintf( pth, sizeof(pth), MOUNT_POINT"/web/index.html" );
+    snprintf( pth, sizeof(pth), MOUNT_POINT"/index.htm" );
     f = fopen(pth, "rb");
     if (f == NULL) {
     	printf("Failed to open: %s!\n", pth);
+		sd_close();
         return( ESP_FAIL );
     }
 
@@ -57,7 +62,10 @@ esp_err_t index_get_handler(httpd_req_t *req)
 	while( ret_sz > 0 );
 
     fclose(f);
+	sd_close();
 	#endif 
+
+
 	return ESP_OK;
 }
 
@@ -73,6 +81,8 @@ esp_err_t pics_post_handler(httpd_req_t *req)
 	char *buf = g_buf;
 	size_t buf_remain = G_BUF_SZ;
 	int remaining = req->content_len;
+	FILE      *f;
+	char     pth[164];
 
 	while (remaining > 0) {
 		int recv_len = httpd_req_recv(req, buf, MIN(remaining, buf_remain));
@@ -92,6 +102,19 @@ esp_err_t pics_post_handler(httpd_req_t *req)
 		buf += recv_len;
 	}
 	httpd_resp_sendstr(req, "PICS!!!\n");
+
+
+	/* Save image to SD card */
+    sd_open();
+    snprintf( pth, sizeof(pth), MOUNT_POINT"/new_pic.bin" );
+    f = fopen(pth, "wb");
+    if (f) {
+		buf_remain = fwrite( g_buf, 1, sizeof(g_buf), f);
+    	printf("Opened: %s!   And wrote this much: %d\n", pth, buf_remain );
+    	fclose(f);
+    }
+	sd_close();
+
 	return ESP_OK;
 }
 
