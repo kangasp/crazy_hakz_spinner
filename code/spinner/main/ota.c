@@ -23,29 +23,35 @@ extern const uint8_t ota_html_start[] asm("_binary_ota_html_start");
 extern const uint8_t ota_html_end[] asm("_binary_ota_html_end");
 
 
+esp_err_t ota_get_handler(httpd_req_t *req);
 
 
 
 esp_err_t index_get_handler(httpd_req_t *req)
 {
-	#define INDEX_PATH    MOUNT_POINT"/web/index.html"
-
 	esp_err_t ret;
 	FILE      *f;
 	size_t	  ret_sz;
 	char     buf[64];
-	char     pth[164];
+	char     pth[524];
 	bool reading = TRUE;
 
-	#define SDCARD_SUCK 0
-	#if SDCARD_SUCK
-	httpd_resp_send(req, (const char *) get_home(), get_home_sz() );
+	if( strcmp( req->uri, "/ota" ) == 0 )
+		{
+		return ota_get_handler( req );
+		}
 
-	// httpd_resp_send(req, (const char *) index_html_start, index_html_end - index_html_start);
-	#else
+
     sd_open();
-    printf("Hello, index handler!\n");
-    snprintf( pth, sizeof(pth), MOUNT_POINT"/index.htm" );
+    printf("Hello, * handler!  %s\n", req->uri);
+	if( !req->uri[1] )
+		{
+    	snprintf( pth, sizeof(pth), MOUNT_POINT"/index.htm");
+		}
+	else
+		{
+    	snprintf( pth, sizeof(pth), MOUNT_POINT"%s", req->uri );
+		}
     f = fopen(pth, "rb");
     if (f == NULL) {
     	printf("Failed to open: %s!\n", pth);
@@ -63,7 +69,6 @@ esp_err_t index_get_handler(httpd_req_t *req)
 
     fclose(f);
 	sd_close();
-	#endif 
 
 
 	return ESP_OK;
@@ -172,7 +177,7 @@ esp_err_t update_post_handler(httpd_req_t *req)
  * HTTP Server
  */
 httpd_uri_t index_get = {
-	.uri	  = "/",
+	.uri	  = "/*",
 	.method   = HTTP_GET,
 	.handler  = index_get_handler,
 	.user_ctx = NULL
@@ -205,9 +210,14 @@ static esp_err_t http_server_init(void)
 
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
+	/* Use the URI wildcard matching function in order to
+     * allow the same handler to respond to multiple different
+     * target URIs which match the wildcard scheme */
+    config.uri_match_fn = httpd_uri_match_wildcard;
+
 	if (httpd_start(&http_server, &config) == ESP_OK) {
 		httpd_register_uri_handler(http_server, &index_get);
-		httpd_register_uri_handler(http_server, &ota_get);
+		// httpd_register_uri_handler(http_server, &ota_get);
 		httpd_register_uri_handler(http_server, &update_post);
 		httpd_register_uri_handler(http_server, &pics_post);
 	}
