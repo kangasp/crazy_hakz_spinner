@@ -30,8 +30,8 @@
                 var center_x = Math.floor(canvas.width / 2);
                 var center_y = Math.floor(canvas.height / 2);
                 for( var deg = 0; deg < 360; deg++ ) {
-                    for( var led = 0; led < 15; led++ ) {
-                        var r = Math.round( led * d / (2*15) );
+                    for( var led = 1; led < 16; led++ ) {
+                        var r = Math.round( led * d / (2*16) );
                         var [x,y] = polar_to_cart( deg, r, center_x, center_y );
                         var [r,b,g] = get_rbg_data( x, y, image_data );
                         bin_data.push(r,b,g);
