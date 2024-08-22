@@ -31,7 +31,7 @@ sdmmc_card_t *card;
 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
 
 
-void sd_open(void)
+esp_err_t sd_open(void)
 {
     esp_err_t ret;
 
@@ -66,7 +66,7 @@ void sd_open(void)
       // ret=spi_bus_initialize(LED_HOST, &buscfg, SPI_DMA_CH_AUTO);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize bus.");
-        return;
+        return ret;
     }
 
     // This initializes the slot without card detect (CD) and write protect (WP) signals.
@@ -86,7 +86,7 @@ void sd_open(void)
             ESP_LOGE(TAG, "Failed to initialize the card (%s). "
                      "Make sure SD card lines have pull-up resistors in place.", esp_err_to_name(ret));
         }
-        return;
+        return ret;
     }
     ESP_LOGI(TAG, "Filesystem mounted");
 
@@ -94,6 +94,7 @@ void sd_open(void)
     // sdmmc_card_print_info(stdout, card);
 
     // Use POSIX and C standard library functions to work with files.
+    return ret;
 }
 
 void sd_close(void)

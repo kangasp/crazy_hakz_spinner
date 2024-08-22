@@ -76,7 +76,7 @@ static int init_led_spi(spi_device_handle_t *spi)
         .max_transfer_sz=BUF_SZ
     };
     spi_device_interface_config_t devcfg={
-        .clock_speed_hz=(SPI_MASTER_FREQ_8M/2), //      SPI_MASTER_FREQ_10M, //      SPI_MASTER_FREQ_40M, //     20*1000*1000,
+        .clock_speed_hz=SPI_MASTER_FREQ_10M, //      SPI_MASTER_FREQ_40M, //     20*1000*1000,
         .mode=0, // 3, SPICOMMON_BUSFLAG_DUAL   SPI_TRANS_MODE_DIO                                //SPI mode 0
         .spics_io_num=-1,                       //CS pin
         .queue_size=1,                          //We want to be able to queue 7 transactions at a time
@@ -217,18 +217,13 @@ void app_main(void)
 
     ota_server( NULL );
 
-
-    // printf("opening File!\n");
-    sd_open();
     memset(s_home, 0, sizeof(s_home));
-    read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
-    // read_pic( MOUNT_POINT"/index.htm", s_home, sizeof(s_home) );
-    // printf("Read index.htm:   %s\n", s_home);
-    // printf("Read gbuf:   %i\n", g_buf[50][1].r);
-    // printf("closing  File!\n");
-    sd_close();
-    // printf("closed  File!\n");
-
+    // printf("opening File!\n");
+    if( sd_open() == ESP_OK )
+        {
+        read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
+        sd_close();
+        }
 
     // setup_encoder(&pcnt_unit);
     encoder = setup_encoder();

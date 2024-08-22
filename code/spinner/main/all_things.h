@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
-
+#include "esp_err.h"
 
 #define MOUNT_POINT "/sdcard"
 #define FALSE 0
@@ -29,7 +29,7 @@ void ota_server(void* args);
 void sd_main(void);
 int read_pic( const char * const f_name, uint *buf, size_t sz );
 
-void sd_open(void);
+esp_err_t sd_open(void);
 void sd_close(void);
 
 char * get_home();
