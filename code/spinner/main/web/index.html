@@ -2,8 +2,6 @@
 
 <html>
 	<head>
-        <link rel="stylesheet" href="boot.css">
-        <script src="boot.js"></script>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>Image Conversion</title>
 		<script>
@@ -86,16 +84,15 @@
 					var progress = document.getElementById("progress");
 					progress.textContent = "Progress: " + (e.loaded / e.total * 100).toFixed(0) + "%";
 				};
-				xhr.open("POST", "/pics", true);
+				xhr.open("POST", "/pics_fall", true);
 				xhr.send(bin_data);
             }
-
 
 		</script>
 	</head>
 	<body>
         <div class="container">
-            <h1>HI, testing</h1>
+            <h1><blink>Hello, this is the fall guyzz!</blink></h1>
         </div>
         <input type="file" accept="image/*" onchange="load_image(event)">
         <canvas id="id_canvas"></canvas>

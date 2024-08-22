@@ -76,7 +76,7 @@ static int init_led_spi(spi_device_handle_t *spi)
         .max_transfer_sz=BUF_SZ
     };
     spi_device_interface_config_t devcfg={
-        .clock_speed_hz=SPI_MASTER_FREQ_10M, //      SPI_MASTER_FREQ_40M, //     20*1000*1000,
+        .clock_speed_hz=(SPI_MASTER_FREQ_8M/2), //      SPI_MASTER_FREQ_10M, //      SPI_MASTER_FREQ_40M, //     20*1000*1000,
         .mode=0, // 3, SPICOMMON_BUSFLAG_DUAL   SPI_TRANS_MODE_DIO                                //SPI mode 0
         .spics_io_num=-1,                       //CS pin
         .queue_size=1,                          //We want to be able to queue 7 transactions at a time
