@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -32,7 +33,11 @@
 #define PIN_NUM_CS   -1
 #define PIN_A GPIO_NUM_25
 #define PIN_B GPIO_NUM_26
+#define PIN_Z GPIO_NUM_27
 
+
+volatile static uint8_t     zero_me = 0;
+static rotary_encoder_t    *s_encoder;
 
 
 const uint8_t gamma8[] = {
@@ -62,6 +67,8 @@ const uint8_t gamma8[] = {
 // 0
 // };
 
+void setup_zeroing_isr();
+static inline void IRAM_ATTR zero_isr_handler(void* arg);
 static int init_led_spi(spi_device_handle_t *spi);
 
 static int init_led_spi(spi_device_handle_t *spi)
@@ -205,16 +212,17 @@ void app_main(void)
     esp_err_t ret;
     spi_device_handle_t spi;
     uint32_t *buf;
-    int i;
     // pcnt_unit_handle_t pcnt_unit;
-    rotary_encoder_t *encoder;
     size_t size = BUF_SZ;
     spi_transaction_t t = {0};
 
+    int                  s_i;
+    int                  i;
 	FILE      *f;
 	size_t	  ret_sz;
 	char     pth[164];
 
+    setup_zeroing_isr();
     ota_server( NULL );
 
     memset(s_home, 0, sizeof(s_home));
@@ -224,9 +232,8 @@ void app_main(void)
         read_pic( MOUNT_POINT"/new_pic.bin", g_buf, G_BUF_SZ );
         sd_close();
         }
-
     // setup_encoder(&pcnt_unit);
-    encoder = setup_encoder();
+    s_encoder = setup_encoder();
     ret = init_led_spi(&spi);
 	buf = (uint32_t*)heap_caps_malloc(size, MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
     memset(buf, 0, sizeof(*buf));
@@ -262,7 +269,8 @@ void app_main(void)
 
     TaskHandle_t myTaskHandle2 = NULL;
     xTaskCreatePinnedToCore(frame_buffer, "FRAMEBUFFER!!", 4096, NULL,10, &myTaskHandle2, 1);
-
+    i = s_encoder->get_counter_value(s_encoder);
+    s_i = i%360;
     while( 1 )
         {
             /*
@@ -272,9 +280,20 @@ void app_main(void)
             2       210, 106
             3       330, 226
             */
-        i = encoder->get_counter_value(encoder);
+        i = s_encoder->get_counter_value(s_encoder);
+        if( zero_me )
+            {
+            s_i = i;
+            zero_me = 0;
+            }
+
+        i -= s_i;
+
+    // pcnt_counter_clear(ec11->pcnt_unit);
+
         while( i < 0 ) i = i+360;
-        update_buf(buf, i%360);
+        i = i%360;
+        update_buf(buf, i);
         ret = spi_device_transmit( spi, &t );
         ets_delay_us(5);
         vTaskDelay(0);
@@ -301,3 +320,19 @@ void frame_buffer(void* args)
     }
     // sd_close();
 }
+
+
+static inline void IRAM_ATTR zero_isr_handler(void* arg) {
+    zero_me = 1;
+}
+
+void setup_zeroing_isr() {
+    gpio_pad_select_gpio(PIN_Z);
+    gpio_set_direction(PIN_Z, GPIO_MODE_INPUT);
+    // gpio_pulldown_en(PIN_Z);
+    gpio_set_intr_type(PIN_Z, GPIO_INTR_POSEDGE);
+
+    gpio_install_isr_service(0);
+    gpio_isr_handler_add(PIN_Z, zero_isr_handler, NULL);
+    }
+
