@@ -4,19 +4,19 @@
   (descr "http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf")
   (tags "LED RGB SPI")
   (attr smd)
-  (fp_text reference "REF**" (at 0 2.11) (layer "F.SilkS")
+  (fp_text reference "REF**" (at 0 2.11) (layer "F.SilkS") hide
     (effects (font (size 1 1) (thickness 0.15)))
     (tstamp ccaf3cdb-51b6-4479-b25c-56facdafcbcc)
   )
-  (fp_text value "SK9822-hakz" (at 0 -2) (layer "F.Fab")
+  (fp_text value "SK9822-hakz" (at 0 -2) (layer "F.Fab") hide
     (effects (font (size 1 1) (thickness 0.15)))
     (tstamp 53074453-c551-4aca-8333-2c4945d54691)
   )
-  (fp_text user "1" (at -1.7 -0.9) (layer "F.SilkS")
+  (fp_text user "1" (at -1.7 -0.9) (layer "F.SilkS") hide
     (effects (font (size 0.6 0.6) (thickness 0.1)))
     (tstamp cf2c534f-7dd7-49cb-b2b8-f85f7f310dfb)
   )
-  (fp_text user "${REFERENCE}" (at 0 0) (layer "F.Fab")
+  (fp_text user "${REFERENCE}" (at 0 0) (layer "F.Fab") hide
     (effects (font (size 0.3 0.3) (thickness 0.07)))
     (tstamp 1e797495-68a6-4516-a357-222d524cda23)
   )

@@ -1,0 +1,66 @@
+### Module positions - created on Fri Oct 25 16:05:33 2024 ###
+### Printed by Pcbnew version (6.0.7)
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val              Package                               PosX       PosY       Rot  Side
+D2        APA102           SK9822-hakz                       111.6138   -52.2043  -90.0000  top
+D3        APA102           SK9822-hakz                       115.1864   -52.2177  -90.0000  top
+D4        APA102           SK9822-hakz                       118.8128   -52.1640  -90.0000  top
+D5        APA102           SK9822-hakz                       122.3988   -52.1909  -90.0000  top
+D6        APA102           SK9822-hakz                       125.7130   -55.1950  169.0000  top
+D7        APA102           SK9822-hakz                       125.0435   -58.3724  169.0000  top
+D8        APA102           SK9822-hakz                       124.4150   -61.6236  169.0000  top
+D9        APA102           SK9822-hakz                       123.8124   -64.8470  170.0000  top
+D11       APA102           SK9822-hakz                       122.4853   -71.9272  169.0000  top
+D12       APA102           SK9822-hakz                       121.7677   -75.3622  169.0000  top
+D13       APA102           SK9822-hakz                       121.0177   -78.8582  169.0000  top
+D14       APA102           SK9822-hakz                       120.3197   -82.2307  169.0000  top
+D15       APA102           SK9822-hakz                       116.9103   -85.0307   90.0000  top
+D16       APA102           SK9822-hakz                       113.1979   -85.0137   90.0000  top
+D17       APA102           SK9822-hakz                       109.4222   -85.0328   90.0000  top
+D18       APA102           SK9822-hakz                       105.7038   -85.0519   90.0000  top
+D19       APA102           SK9822-hakz                       102.5651   -81.6349  -11.0000  top
+D20       APA102           SK9822-hakz                       103.2750   -77.8772  -11.0000  top
+D21       APA102           SK9822-hakz                       104.0263   -74.2024  -11.0000  top
+D22       APA102           SK9822-hakz                       104.7292   -70.4988  -11.0000  top
+D23       APA102           SK9822-hakz                       105.9858   -64.7184  -11.0000  top
+D24       APA102           SK9822-hakz                       106.6633   -61.3578  -11.0000  top
+D25       APA102           SK9822-hakz                       107.3411   -58.0356  -11.0000  top
+D26       APA102           SK9822-hakz                       108.0001   -54.7068  -11.0000  top
+D27       APA102           SK9822-hakz                       109.4705   -67.8584  -90.0000  top
+D28       APA102           SK9822-hakz                       112.9961   -67.8923  -90.0000  top
+D29       APA102           SK9822-hakz                       116.5556   -67.9007  -90.0000  top
+D30       APA102           SK9822-hakz                       120.0558   -67.8923  -90.0000  top
+D31       APA102           SK9822-hakz                       125.3902   -85.8492  -90.0000  top
+D32       APA102           SK9822-hakz                       139.6324   -52.1817  -90.0000  top
+D33       APA102           SK9822-hakz                       143.2856   -52.1996  -90.0000  top
+D34       APA102           SK9822-hakz                       146.9836   -52.1458  -90.0000  top
+D35       APA102           SK9822-hakz                       150.6010   -52.1906  -90.0000  top
+D36       APA102           SK9822-hakz                       153.6321   -55.2030  169.0000  top
+D37       APA102           SK9822-hakz                       153.0569   -58.4335  169.0000  top
+D38       APA102           SK9822-hakz                       152.4302   -61.6390  169.0000  top
+D39       APA102           SK9822-hakz                       151.8293   -64.8336  169.0000  top
+D40       APA102           SK9822-hakz                       150.4205   -72.0025  169.0000  top
+D41       APA102           SK9822-hakz                       149.7493   -75.4106  169.0000  top
+D42       APA102           SK9822-hakz                       149.0688   -78.7594  169.0000  top
+D43       APA102           SK9822-hakz                       148.3426   -82.1829  169.0000  top
+D44       APA102           SK9822-hakz                       144.7566   -85.0655   90.0000  top
+D45       APA102           SK9822-hakz                       141.2108   -85.0566   90.0000  top
+D46       APA102           SK9822-hakz                       137.5845   -85.0118   90.0000  top
+D47       APA102           SK9822-hakz                       134.0029   -85.0297   90.0000  top
+D48       APA102           SK9822-hakz                       130.5596   -81.5012  -11.0000  top
+D49       APA102           SK9822-hakz                       131.2777   -77.8773  -11.0000  top
+D50       APA102           SK9822-hakz                       132.0030   -74.1502  -11.0000  top
+D51       APA102           SK9822-hakz                       132.7346   -70.5019  -11.0000  top
+D52       APA102           SK9822-hakz                       133.9911   -64.5895  -11.0000  top
+D53       APA102           SK9822-hakz                       134.6704   -61.3704  -11.0000  top
+D54       APA102           SK9822-hakz                       135.3050   -58.1237  -11.0000  top
+D55       APA102           SK9822-hakz                       135.9303   -54.8640  -11.0000  top
+D56       APA102           SK9822-hakz                       137.4716   -67.8986  -90.0000  top
+D57       APA102           SK9822-hakz                       140.8428   -67.9120  -90.0000  top
+D58       APA102           SK9822-hakz                       144.2273   -67.9389  -90.0000  top
+D59       APA102           SK9822-hakz                       147.7194   -67.9120  -90.0000  top
+D60       APA102           SK9822-hakz                       153.3888   -85.8532  -90.0000  top
+J1        Conn_01x04_Male  PinHeader_1x04_P2.54mm_Vertical   100.1000   -66.0000    0.0000  top
+J2        Conn_01x04_Male  PinHeader_1x04_P2.54mm_Vertical   155.9000   -66.0000    0.0000  top
+## End
