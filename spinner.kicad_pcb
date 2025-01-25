@@ -617,7 +617,7 @@
 
   (footprint "Library:MULTI_PART_THRU_BEAM" (layer "F.Cu")
     (tedit 5A02E8C5) (tstamp 26db9d7f-bdd4-46e1-90b0-c4037df64b7e)
-    (at 216.04 47.422 90)
+    (at 150 45.898 90)
     (descr "4-lead though-hole mounted DIP package, row spacing 10.16 mm (400 mils)")
     (tags "THT DIP DIL PDIP 2.54mm 10.16mm 400mil")
     (property "Sheetfile" "spinner.kicad_sch")
@@ -948,7 +948,7 @@
 
   (footprint "Library:MULTI_PART_THRU_BEAM" (layer "F.Cu")
     (tedit 5A02E8C5) (tstamp 52b453fb-eb09-4d8a-be86-e3701695d1f9)
-    (at 70.012184 98.603807 -1)
+    (at 106.058 121.59 -1)
     (descr "4-lead though-hole mounted DIP package, row spacing 10.16 mm (400 mils)")
     (tags "THT DIP DIL PDIP 2.54mm 10.16mm 400mil")
     (property "Sheetfile" "spinner.kicad_sch")
@@ -6156,6 +6156,7 @@
   )
 
   (gr_circle (center 150 100) (end 200 100) (layer "F.SilkS") (width 0.15) (fill none) (tstamp 03287e10-9fb1-481d-a563-b2a67b518149))
+  (gr_circle (center 150 100) (end 205 100) (layer "F.SilkS") (width 0.15) (fill none) (tstamp 5e9a89aa-0dbc-450e-8b3d-7931569caeb1))
   (gr_circle (center 150 100) (end 211.5 100) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp 60c40dcb-593e-42ee-a51d-5800ed864e5d))
   (gr_text "<-ON\nOFF->" (at 105.55 28.88 -330) (layer "F.SilkS") (tstamp 0a09053a-820e-4f40-a1a4-84bb4e071fe1)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
