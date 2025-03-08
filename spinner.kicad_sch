@@ -7195,13 +7195,13 @@
   (symbol (lib_id "hakz2:ESP32-S3-WROOM-1") (at 279.4 181.61 0) (unit 1)
     (in_bom yes) (on_board yes) (fields_autoplaced)
     (uuid cfaa1f3e-4a2b-4b6e-87fb-91d50aada053)
-    (property "Reference" "?" (id 0) (at 281.4194 133.35 0)
+    (property "Reference" "u10" (id 0) (at 281.4194 133.35 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Value" "ESP32-S3-WROOM-1" (id 1) (at 281.4194 135.89 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "" (id 2) (at 279.4 181.61 0)
+    (property "Footprint" "Library:ESP32-S3-WROOM-1U" (id 2) (at 279.4 181.61 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 279.4 181.61 0)
@@ -8656,9 +8656,6 @@
     (path "/5f886d73-fc76-42af-9787-1d070dc2801f"
       (reference "#PWR0348") (unit 1) (value "GND") (footprint "")
     )
-    (path "/cfaa1f3e-4a2b-4b6e-87fb-91d50aada053"
-      (reference "?") (unit 1) (value "ESP32-S3-WROOM-1") (footprint "")
-    )
     (path "/60d65a5a-11b0-40d8-90d5-8a49016ca263"
       (reference "BT1") (unit 1) (value "Battery_Cell") (footprint "Library:Spinner_BatteryHolder_Keystone_2460_1xAA")
     )
@@ -8997,6 +8994,9 @@
     )
     (path "/897ad178-18be-486d-95ad-e6f878425fa8"
       (reference "U6") (unit 1) (value "ESP32-WROVER") (footprint "Library:ESP32-WROVER")
+    )
+    (path "/cfaa1f3e-4a2b-4b6e-87fb-91d50aada053"
+      (reference "u10") (unit 1) (value "ESP32-S3-WROOM-1") (footprint "Library:ESP32-S3-WROOM-1U")
     )
   )
 )

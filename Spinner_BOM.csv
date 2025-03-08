@@ -22,6 +22,7 @@ New thoughts on parts:
 Bounce Beam:  DY-ITR20001/T24,  C7433015, Package:  DIP-4
 Through Beam: ZGY8402(ITR), C277757, Package: DIP-4
 ESP32 Module:  ESP32-S3-WROOM-1-N8R2,  C2913204
+    FIX THIS:  The package we have in kicad is the -1U which has a SMA instead of a trace antenna with keep out.    
 USB-C: USB-TYPE-C-009, C2927029
     FTDI is used for programming
 SD HOLDER: TF-CARD H1.8,  C7529389
