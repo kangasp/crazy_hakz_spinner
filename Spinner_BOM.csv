@@ -26,7 +26,8 @@ ESP32 Module:  ESP32-S3-WROOM-1-N8R2,  C2913204
 USB-C: USB-TYPE-C-009, C2927029
     FTDI is used for programming
 SD HOLDER: TF-CARD H1.8,  C7529389
-BMS: BQ24073RGTR, C15220
+BMS: BQ24073RGTR, C15220,  This handles 1.5A input charging, and 5A output (LEDs can draw, 75*20*3)
+
 
 
 Battery is going to be a (AA li-ion), 14500 3.7v / battery
