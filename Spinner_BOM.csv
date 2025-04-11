@@ -13,7 +13,7 @@
 
 
 ESP Memory thoughts:  Spoke = 25 LEDs, 3 Bytes / LED, 360 Spokes --> 3*25*360 = 27k
-So.. most have 512KB of sram... and the N8R2 has 2MB psram
+So.. most have 512KB of sram... and the N8R2 has 2MB psramf
 
 OLD, no longer using -->  ESP32 Module:  ESP32-WROVER-E-N16R8, C529589
 
@@ -27,10 +27,8 @@ USB-C: USB-TYPE-C-009, C2927029
     FTDI is used for programming
 SD HOLDER: TF-CARD H1.8,  C7529389
 BMS: BQ24073RGTR, C15220,  This handles 1.5A input charging, and 5A output (LEDs can draw, 75*20*3)
-
+Boost:  TPS61023DRLR, C919459, SOT-563
 
 
 Battery is going to be a (AA li-ion), 14500 3.7v / battery
-
-
 
