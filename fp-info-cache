@@ -1,4 +1,4 @@
-24810644899744316
+24810645597082736
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -66091,7 +66091,7 @@ MULTI_PART_THRU_BEAM
 4-lead though-hole mounted DIP package, row spacing 10.16 mm (400 mils)
 THT DIP DIL PDIP 2.54mm 10.16mm 400mil
 0
-8
+4
 4
 Library
 SK9822-hakz
