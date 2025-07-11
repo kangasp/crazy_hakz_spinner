@@ -41,11 +41,30 @@ LDO:  C9055, SPX3819M5-L-3-3/TR, Package:  SOT-23-5
 Battery is going to be a (AA li-ion), 14500 3.7v / battery
 
 
+------- PINS -------------
 SPI Notes:
 SPI 0 & 1 are used by flash & psram.
 SPI 2 is more fancy and should be used with the SD card interface.
 SPI 3 should be used for the LEDs.
 GPIO for SPI 2 & 3 can be muxed to any pin.
 
+IR Beam Interrupters
+These can go on any digitial pin.
+
+Cap Touch Inputs
+
+
+USB Pins are on GPIO19, GPIO20
+
 Notes on Layout,  Look at this in the datasheet:
 9 Peripheral Schematics
+
+
+
+
+
+
+
+
+
+
