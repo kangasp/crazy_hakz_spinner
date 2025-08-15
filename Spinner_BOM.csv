@@ -57,6 +57,53 @@ GPIO12	D1	not used in 1-line SD mode; 10k pullup in 4-line mode
 GPIO13	D2	not used in 1-line SD mode; 10k pullup in 4-line mode
 GPIO14	D3	not used in 1-line SD mode, but card's D3 pin must have a 10k pullup
 
+
+
+----------- Micropython Test SD ---------------
+
+Testing completed:  Determined that resistors are not needed.
+Example speeds:
+
+Hello World Again!
+['System Volume Information', '.Spotlight-V100', 'test.txt', '.fseventsd', '006B2016XX.gca', '006D7429XX.gca', 'build_hash.txt', 'C0199XX.gca', 'C0200XX.gca', 'demo_data.gca', 'hwm_test_sd.dat', 'key_rgn.bin', 'sys_files.gca', 'SYS_KRNL.bin', 'test.txt.bak']
+data file: test.txt: 7, in 0.00195313
+data file: 006B2016XX.gca: 29748, in 0.00488281
+data file: 006D7429XX.gca: 31792, in 0.00683594
+data file: build_hash.txt: 40, in 0.000976563
+data file: C0199XX.gca: 51200, in 0.00683594
+data file: C0200XX.gca: 51200, in 0.0078125
+data file: demo_data.gca: 51200, in 0.0078125
+data file: hwm_test_sd.dat: 51200, in 0.00683594
+data file: key_rgn.bin: 7261, in 0.00292969
+data file: sys_files.gca: 51200, in 0.0078125
+data file: SYS_KRNL.bin: 51200, in 0.0078125
+data file: test.txt.bak: 0, in 0.00195313
+
+
+
+
+from machine import Pin
+import machine, Pin, os, vfs
+p_clk = Pin(9)
+p_cmd = Pin(10)
+p_dat0 = Pin(11)
+p_dat1 = Pin(12)
+p_dat2 = Pin(13)
+p_dat3 = Pin(14)
+
+SDCard(slot=1, width=1, cd=None, wp=None, sck=None, miso=None, mosi=None, cs=None, cmd=None, data=None, freq=20000000)
+
+
+# On original ESP32, slot 2 uses pins sck=18, cs=5, miso=19, mosi=23
+sd = machine.SDCard(slot=1, width=1, sck=p_clk, cmd=p_cmd, data=[p_dat0]  )
+
+sd = machine.SDCard(slot=1, width=4, sck=machine.Pin(38), cmd=machine.Pin(37), data=(machine.Pin(36), machine.Pin(35), machine.Pin(34), machine.Pin(33)))
+
+
+
+
+
+
 PIXEL SPI
 GPIO17 - data
 GPIO18 - clock
@@ -80,16 +127,4 @@ USB Pins are on GPIO19, GPIO20
 
 Notes on Layout,  Look at this in the datasheet:
 9 Peripheral Schematics
-
-
-
-
-
-
-
-
-
-
-
-
 
