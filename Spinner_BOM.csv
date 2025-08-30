@@ -38,6 +38,10 @@ Boot Button: C720477, TS-1088-AR02016
 
 LDO:  C9055, SPX3819M5-L-3-3/TR, Package:  SOT-23-5
 
+LEDs for power:  C84256 red 0805 and C2297 (green)
+
+
+
 Battery is going to be a (AA li-ion), 14500 3.7v / battery
 
 
