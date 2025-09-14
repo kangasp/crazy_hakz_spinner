@@ -1,0 +1,92 @@
+(footprint "TouchSlider-2_20x10mm"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -6.95 0)
+		(layer "F.SilkS")
+		(uuid "25b47372-5bba-475b-a7dd-027c6dd96631")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TouchSlider-2_20x10mm"
+		(at 0 -5.65 0)
+		(layer "F.Fab")
+		(uuid "51596691-8532-4e7b-9f78-36e3d2420d99")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7097725d-bae7-43f8-889f-14c96d86121d")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "112d395b-177b-4ecc-8cd2-1f514e5a53ba")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(pad "1" smd rect
+		(at -6.5 0)
+		(size 7.5 10)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "206d7a26-21ed-4fb5-9b0c-c18e395ede93")
+	)
+	(pad "1" smd trapezoid
+		(at -2.75 -2.5)
+		(size 4.5 5)
+		(rect_delta 0 -4.5)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "7067bb84-682a-47aa-9bff-a7ca9ae982be")
+	)
+	(pad "1" smd trapezoid
+		(at -2.75 2.5)
+		(size 4.5 5)
+		(rect_delta 0 4.5)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "047f9f6e-1bfb-4e6b-8a42-7d42e45fb2b8")
+	)
+	(pad "2" smd trapezoid
+		(at 0.5 0)
+		(size 4.5 5)
+		(rect_delta -5 0)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "bcba4ee4-6234-4e98-bcb4-c0d777dbb740")
+	)
+	(pad "2" smd rect
+		(at 6.5 0)
+		(size 7.5 10)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "4feeee40-0236-4722-8a40-74f7be5b5bb7")
+	)
+	(embedded_fonts no)
+)

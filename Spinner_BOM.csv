@@ -33,7 +33,7 @@ BMS: BQ24073RGTR, C15220,  This handles 1.5A input charging, and 5A output (LEDs
 Boost:  fTPS61022RWUR, C915088, VQFN-7(2x2)
 Inductor (boost):  XAL7030-102MEC, C19191626, SMD,7.5x7.5mm
 Switch: JS102011SAQN, C221660
-Reset Button: C318884, TS-1187A-B-A-B
+Reset Button: C720477, TS-1088-AR02016
 Boot Button: C720477, TS-1088-AR02016
 
 LDO:  C9055, SPX3819M5-L-3-3/TR, Package:  SOT-23-5
