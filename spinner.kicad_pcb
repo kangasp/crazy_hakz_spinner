@@ -23444,14 +23444,14 @@
 	(footprint "Library:SK9822-hakz"
 		(layer "B.Cu")
 		(uuid "4640a89d-bdb0-4f95-b0f7-4816ec3703e3")
-		(at 150 103)
+		(at 150 100)
 		(descr "http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf")
 		(tags "LED RGB SPI")
-		(property "Reference" "D0"
+		(property "Reference" "D101"
 			(at 0 -2.11 0)
 			(layer "B.SilkS")
 			(hide yes)
-			(uuid "3512d120-73be-4bcb-8d94-8921683eccab")
+			(uuid "b5b51092-2b2c-4600-b12a-e28c0f143b0d")
 			(effects
 				(font
 					(size 1 1)
@@ -23464,7 +23464,7 @@
 			(at 0 2 0)
 			(layer "B.Fab")
 			(hide yes)
-			(uuid "f385277d-2578-4606-b795-79952f91385a")
+			(uuid "09f29ca0-ec89-4943-91e3-811b4dc40115")
 			(effects
 				(font
 					(size 1 1)
@@ -23477,7 +23477,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "017aa561-c9c7-4918-8d18-bc6f77e5d7d1")
+			(uuid "4f5ecde4-a439-418b-913b-71694ec5eb71")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23489,7 +23489,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "53270ccb-e079-43f2-84ae-561b734831ca")
+			(uuid "eaf7b395-c39a-4f8b-b04d-e98e93e7b11f")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32128,10 +32128,10 @@
 	(footprint "Library:SK9822-hakz"
 		(layer "B.Cu")
 		(uuid "ab28caa5-eef0-403c-83c1-bdc617c7ae06")
-		(at 150 100)
+		(at 150 102.9972)
 		(descr "http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf")
 		(tags "LED RGB SPI")
-		(property "Reference" "D101"
+		(property "Reference" "D0"
 			(at 0 -2.11 0)
 			(layer "B.SilkS")
 			(hide yes)
