@@ -13208,7 +13208,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "SolderJumper_3_Bridged12"
+		(property "Value" "BOOST_MODE"
 			(at 566.42 269.2399 90)
 			(effects
 				(font
