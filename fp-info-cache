@@ -1,4 +1,4 @@
-24812402710217510
+24815920698072934
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -66094,6 +66094,13 @@ THT DIP DIL PDIP 2.54mm 10.16mm 400mil
 4
 4
 Library
+PinHeader_1x03_P2.54mm_HRZ_SMD_Pin1Left
+surface-mounted straight pin header, 1x03, 2.54mm pitch, single row, style 1 (pin 1 left)
+Surface mounted pin header SMD 1x03 2.54mm single row style1 pin1 left
+0
+3
+3
+Library
 SK9822-hakz
 http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf
 LED RGB SPI
@@ -66114,6 +66121,13 @@ TouchSlider-2_20x10mm
 0
 5
 2
+Library
+conn_smd_3p
+
+
+0
+0
+0
 Library
 hakz_01
 

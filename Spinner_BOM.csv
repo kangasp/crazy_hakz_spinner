@@ -30,11 +30,14 @@ USB-C:  C5150972, 12402012E212A
     Answer:   ESP32-S3 has a ROM bootloader as permanent fallback / backup.  USB will enumerate as a serial port.  So... no FTDI type thing.
 SD HOLDER: TF-CARD H1.8,  C7529389
 BMS: BQ24073RGTR, C15220,  This handles 1.5A input charging, and 5A output (LEDs can draw, 75*20*3)
-Boost:  fTPS61022RWUR, C915088, VQFN-7(2x2)
+Polyfuse: C70191,  SL1210650
+Boost:  TPS61022RWUR, C915088, VQFN-7(2x2)
 Inductor (boost):  XAL7030-102MEC, C19191626, SMD,7.5x7.5mm
 Switch: JS102011SAQN, C221660
 Reset Button: C720477, TS-1088-AR02016
 Boot Button: C720477, TS-1088-AR02016
+Header Power: C6339013, TSM-103-01-T-SH
+
 
 LDO:  C9055, SPX3819M5-L-3-3/TR, Package:  SOT-23-5
 
